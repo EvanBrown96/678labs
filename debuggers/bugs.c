@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
   // Can we please forget about mosquitoes?
   // HINT: Where is the string that useless_bug is pointing to located in
   // memory and what area of memory does free() work with?
-  free(bug_info.useless_bug); // Remove this line if it is problematic
+  //free(bug_info.useless_bug); // Remove this line if it is problematic
 
   printf("Bugs didn't cause me to crash!\n\n");
 
