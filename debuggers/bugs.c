@@ -139,12 +139,11 @@ int main(int argc, char** argv) {
   echoohce(bug_info.sentence);
 
   // Free all duplicated strings
-  free(bug_info.sentence[0]);
-  free(bug_info.sentence[1]);
-  free(bug_info.sentence[2]);
-  free(bug_info.sentence[3]);
-  free(bug_info.sentence[4]);
-  free(bug_info.sentence[5]);
+  // also set them to NULL in case they are accessed in the future
+  for(int i = 0; i < 6; i++){
+    free(bug_info.sentence[i]);
+    bug_info.sentence[i] = NULL;
+  }
 
   // Prints "The current bug adjective is: (null)"
   printf("The current bug adjective is: %s\n", bug_info.sentence[2]);
