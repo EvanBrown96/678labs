@@ -65,7 +65,7 @@ void echoohce(char** strs) {
 
   // FIXME: Something is wrong in this for loop. It is printing garbage characters.
   for (iter = strs; *iter != NULL; ++iter)
-    printf("%s ", iter);
+    printf("%s ", *iter);
 
   fflush(stdout);
 
