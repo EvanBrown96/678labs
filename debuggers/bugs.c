@@ -127,6 +127,8 @@ int main(int argc, char** argv) {
   printf("%s\n", bug_info.useless_bug);
 
   // Change the adjective to something appropriate for butterflies
+  // must free memory of sentence[2] first so it is not leaked
+  free(bug_info.sentence[2]);
   bug_info.sentence[2] = strdup("colorful");
 
   // Print "The most colorful bug is a butterfly"
