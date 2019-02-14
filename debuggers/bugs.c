@@ -75,7 +75,7 @@ void echoohce(char** strs) {
   // FIXME: Do the same thing only backwards. The array has a NULL pointer at
   // the front, right? Nope. Both sides of the condition in the for loop are
   // wrong.
-  for (; *iter != NULL; --iter)
+  for (; iter != stop_beginning; --iter)
     printf("%s ", *iter);
 
   printf("\n");
