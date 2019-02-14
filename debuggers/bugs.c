@@ -35,7 +35,7 @@
 struct Storage {
   intptr_t num_bugs_on_mars;
   const char* scary_bug;
-  char* sentence[6]; // It might be necessary to grow this array.
+  char* sentence[7]; // It might be necessary to grow this array.
   const char* colorful_bug;
   intptr_t num_bugs_on_earth;
   intptr_t num_bugs_on_venus;
@@ -102,6 +102,7 @@ int main(int argc, char** argv) {
   bug_info.sentence[3] = strdup("bug");
   bug_info.sentence[4] = strdup("is");
   bug_info.sentence[5] = strdup("a");
+  bug_info.sentence[6] = NULL;
 
   // Print the current bug population on various planets
   printf("The current bug population of Earth is about: %zu\n",
