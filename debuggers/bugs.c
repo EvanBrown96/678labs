@@ -87,6 +87,7 @@ int main(int argc, char** argv) {
 
   // Initialize structure
   bug_info.num_bugs_on_earth = 7400000000 * 200000000;
+  bug_info.num_bugs_on_mars = 0;
   bug_info.num_bugs_on_venus = 0;
   bug_info.colorful_bug = "butterfly";
   bug_info.useless_bug = "mosquito";
