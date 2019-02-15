@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 
     //cmdbuf?
 
-    char* myArgs[] = {BASH_EXEC, FIND_EXEC, "-c", "execute", (char*) NULL};
-    if(execv(BASH_EXEC, myArgs) < 0){
+    char* myArgs[] = {FIND_EXEC, "-c", "execute", (char*) NULL};
+    if(execv(FIND_EXEC, myArgs) < 0){
       fprintf(stderr, "\nerror #%d\n", errno);
       return EXIT_FAILURE;
     }
