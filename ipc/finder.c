@@ -10,7 +10,7 @@
 #define BASH_EXEC  "/bin/bash"
 #define FIND_EXEC  "/usr/bin/find"
 #define XARGS_EXEC "/usr/bin/xargs"
-#define GREP_EXEC  "/bin/grep"
+#define GREP_EXEC  "/usr/bin/grep" // change this back!!!!!!!
 #define SORT_EXEC  "/usr/bin/sort"
 #define HEAD_EXEC  "/usr/bin/head"
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
       // close write ends of pipes 2 and 3
       close(p2[1]);
       close(p3[1]);
-      // set standard output as the write end of p1 and close p1, since it's not needed anymore
+      // set standard output to the write end of p1 and close p1, since it's not needed anymore
       dup2(p1[1], STDOUT_FILENO);
       close(p1[1]);
 
@@ -74,24 +74,21 @@ int main(int argc, char* argv[]){
     // close unnecessary write ends
     close(p1[1]);
     close(p3[1]);
-    // set standard input
-    //dup2(p1[0], STDIN_FILENO);
-    // read message from p1
-    size_t rsize;
-    char buf[BSIZE];
-
-    while((rsize = read(p1[0], buf, BSIZE)) > 0);
-
-    // close read end
+    // set standard input to the read end of pipe 1
+    dup2(p1[0], STDIN_FILENO);
     close(p1[0]);
-
-    // forward message
-    write(p2[1], buf, BSIZE);
-
-    // close write end
+    // set standard output to the write end of pipe 2
+    dup2(p2[1], STDOUT_FILENO);
     close(p2[1]);
 
+    char* args[] = {XARGS_EXEC, GREP_EXEC, "-c", search_str, (char*) NULL};
+    if(execv(XARGS_EXEC, args) < 0){
+      fprintf(stderr, "Error executing process 2 (ERRNO %d)", errno);
+      return EXIT_FAILURE;
+    }
+
     exit(0);
+    
   }
 
   // second process
