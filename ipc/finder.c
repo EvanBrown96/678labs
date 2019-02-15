@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     //cmdbuf?
 
-    char* myArgs[] = {FIND_EXEC, "-c", "execute", (char*) NULL};
+    char* myArgs[] = {FIND_EXEC, "bash-4.2", "-name", "'*'.[ch]", (char*) NULL};
     if(execv(FIND_EXEC, myArgs) < 0){
       fprintf(stderr, "\nerror #%d\n", errno);
       return EXIT_FAILURE;
