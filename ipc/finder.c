@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     }
     exit(0);
   }
+
+
   //
   // pid_2 = fork();
   // if (pid_2 == 0) {
@@ -91,6 +93,12 @@ int main(int argc, char *argv[])
   if ((waitpid(pid_1, &status, 0)) == -1) {
     fprintf(stderr, "Process 1 encountered an error. ERROR%d", errno);
     return EXIT_FAILURE;
+  }
+
+  char buf[256];
+
+  while((rsize = read(p1[0], buf, 256)) > 0){
+    write(STDOUT_FILENO, buf, rsize);
   }
   // if ((waitpid(pid_2, &status, 0)) == -1) {
   //   fprintf(stderr, "Process 2 encountered an error. ERROR%d", errno);
