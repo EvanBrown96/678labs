@@ -14,7 +14,242 @@
 #define SORT_EXEC  "/usr/bin/sort"
 #define HEAD_EXEC  "/usr/bin/head"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[]){
+  int status;
+  pid_t pid_1, pid_2, pid_3, pid_4;
+
+  int p1[2], p2[2], p3[2];
+
+  // create pipes
+  pipe(p1);
+  pipe(p2);
+  pipe(p3);
+
+  // first process
+  pid_1 = fork();
+  if(pid_1 == 0){
+
+      // close all read ends
+      close(p1[0]);
+      close(p2[0]);
+      close(p3[0]);
+      // close write ends of pipes 2 and 3
+      close(p2[1]);
+      close(p3[1]);
+      // set standard output as the write end of p1
+      dup2(p1[1], STDOUT_FILENO);
+
+      char* args[] = {"/bin/ls", (char*) NULL};
+      if(execv("/bin/ls", args) < 0){
+        fprintf(stderr, "Error executing process 1 (ERRNO %d)", errno);
+        return EXIT_FAILURE;
+      }
+
+      exit(0);
+
+  }
+
+  // second process
+  pid_2 = fork();
+  if(pid_2 == 0){
+
+    // close unnecessary read ends
+    close(p2[0]);
+    close(p3[0]);
+    // close unnecessary write ends
+    close(p1[1]);
+    close(p3[1]);
+
+    // read message from p1
+    size_t rsize;
+    char buf[BSIZE];
+
+    while((rsize = read(p1[0], buf, BSIZE)) > 0);
+
+    // close read end
+    close(p1[0]);
+
+    // forward message
+    write(p2[1], buf, BSIZE);
+
+    // close write end
+    close(p2[1]);
+
+    exit(0);
+  }
+
+  // second process
+  pid_3 = fork();
+  if(pid_3 == 0){
+
+    // close unnecessary read ends
+    close(p1[0]);
+    close(p3[0]);
+    // close unnecessary write ends
+    close(p1[1]);
+    close(p2[1]);
+
+    // read message from p1
+    size_t rsize;
+    char buf[BSIZE];
+
+    while((rsize = read(p2[0], buf, BSIZE)) > 0);
+
+    // close read end
+    close(p2[0]);
+
+    // forward message
+    write(p3[1], buf, BSIZE);
+
+    // close write end
+    close(p3[1]);
+
+    exit(0);
+  }
+
+  // second process
+  pid_4 = fork();
+  if(pid_4 == 0){
+
+    // close unnecessary read ends
+    close(p1[0]);
+    close(p2[0]);
+    // close unnecessary write ends
+    close(p1[1]);
+    close(p2[1]);
+    close(p3[1]);
+
+    // read message from p1
+    size_t rsize;
+    char buf[BSIZE];
+
+    while((rsize = read(p3[0], buf, BSIZE)) > 0){
+      printf("%s", buf);
+    }
+
+    // close read end
+    close(p3[0]);
+
+    exit(0);
+  }
+
+  // close all pipe ends in main process
+  close(p1[0]);
+  close(p1[1]);
+  close(p2[0]);
+  close(p2[1]);
+  close(p3[0]);
+  close(p3[1]);
+
+  // verify processes completed successfully
+  if((waitpid(pid_1, &status, 0)) == -1){
+    fprintf(stderr, "Process 1 encountered an error. ERROR%d", errno);
+    return EXIT_FAILURE;
+  }
+
+  if((waitpid(pid_2, &status, 0)) == -1){
+    fprintf(stderr, "Process 1 encountered an error. ERROR%d", errno);
+    return EXIT_FAILURE;
+  }
+
+  if((waitpid(pid_3, &status, 0)) == -1){
+    fprintf(stderr, "Process 1 encountered an error. ERROR%d", errno);
+    return EXIT_FAILURE;
+  }
+
+  if((waitpid(pid_4, &status, 0)) == -1){
+    fprintf(stderr, "Process 1 encountered an error. ERROR%d", errno);
+    return EXIT_FAILURE;
+  }
+
+  return 0;
+
+}
+
+int main3(int argc, char* argv[]){
+  int status;
+  pid_t pid_1;
+
+  int p1[2];
+
+  pipe(p1);
+
+  //printf("%d", p1[0]);
+  //printf("%d", p1[1]);
+
+  pid_1 = fork();
+  if(pid_1 == 0){
+    //close(p1[1]);
+    close(p1[0]);
+
+    printf("a");
+
+    char* msg = "hello world";
+    write(p1[1], msg, BSIZE);
+
+    // ssize_t rsize;
+    // char buf[256];
+    //
+    // printf("d");
+
+    // while((rsize = read(p1[0], buf, 256)) > 0){
+    //   if(rsize > 0){
+    //     printf("a");
+    //   }
+    //   printf("%s", buf);
+    //   fflush(stdout);
+    //   //write(STDOUT_FILENO, buf, rsize);
+    // }
+
+    printf("b");
+
+    close(p1[1]);
+    //close(p1[0]);
+
+    exit(0);
+  }
+
+  printf("b2");
+  fflush(stdout);
+
+  close(p1[1]);
+  //close(p1[0]);
+
+  printf("b3");
+  fflush(stdout);
+
+  //waitpid(pid_1, &status, 0);
+  printf("doh");
+  fflush(stdout);
+
+  if(waitpid(pid_1, &status, 0) == -1){
+    fprintf(stderr, "ERROR #%d", errno);
+    return EXIT_FAILURE;
+  }
+
+  printf("c");
+
+  size_t rsize;
+  char buf[256];
+
+  printf("d");
+
+  fflush(stdout);
+
+  while((rsize = read(p1[0], buf, 256)) > 0){
+    //printf("d");
+    printf("%s", buf);
+    //write(STDOUT_FILENO, buf, rsize);
+  }
+
+  close(p1[0]);
+
+  return 0;
+
+
+}
+
+int main2(int argc, char *argv[])
 {
   int status;
   pid_t pid_1, pid_2, pid_3, pid_4;
@@ -98,8 +333,11 @@ int main(int argc, char *argv[])
   char buf[256];
   size_t rsize;
 
+  //open()
 
   while((rsize = read(p1[0], buf, 256)) > 0){
+    printf("aa");
+    //printf(buf);
     write(STDOUT_FILENO, buf, rsize);
   }
   // if ((waitpid(pid_2, &status, 0)) == -1) {
