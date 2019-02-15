@@ -15,6 +15,16 @@
 #define HEAD_EXEC  "/usr/bin/head"
 
 int main(int argc, char* argv[]){
+
+  if (argc != 4) {
+    printf("usage: finder DIR STR NUM_FILES\n");
+    exit(0);
+  }
+
+  char* search_dir = argv[1];
+  char* search_str = argv[2];
+  char* num_files  = argv[3];
+
   int status;
   pid_t pid_1, pid_2, pid_3, pid_4;
 
@@ -36,11 +46,16 @@ int main(int argc, char* argv[]){
       // close write ends of pipes 2 and 3
       close(p2[1]);
       close(p3[1]);
-      // set standard output as the write end of p1
+      // set standard output as the write end of p1 and close p1, since it's not needed anymore
       dup2(p1[1], STDOUT_FILENO);
+      close(p1[1]);
 
-      char* args[] = {"/bin/ls", (char*) NULL};
-      if(execv("/bin/ls", args) < 0){
+      char cmdbuf[BSIZE];
+      bzero(cmdbuf, BSIZE);
+      sprintf(cmdbuf, "%s %s -name \'*\'.[ch]", FIND_EXEC, search_dir);
+
+      char* args[] = {BASH_EXEC, "-c", cmdbuf, (char*) NULL};
+      if(execv(BASH_EXEC, args) < 0){
         fprintf(stderr, "Error executing process 1 (ERRNO %d)", errno);
         return EXIT_FAILURE;
       }
@@ -59,7 +74,8 @@ int main(int argc, char* argv[]){
     // close unnecessary write ends
     close(p1[1]);
     close(p3[1]);
-
+    // set standard input
+    //dup2(p1[0], STDIN_FILENO);
     // read message from p1
     size_t rsize;
     char buf[BSIZE];
