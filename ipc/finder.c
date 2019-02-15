@@ -96,6 +96,8 @@ int main(int argc, char *argv[])
   }
 
   char buf[256];
+  size_t rsize;
+
 
   while((rsize = read(p1[0], buf, 256)) > 0){
     write(STDOUT_FILENO, buf, rsize);
