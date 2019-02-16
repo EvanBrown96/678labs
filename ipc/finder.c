@@ -10,7 +10,7 @@
 #define BASH_EXEC  "/bin/bash"
 #define FIND_EXEC  "/usr/bin/find"
 #define XARGS_EXEC "/usr/bin/xargs"
-#define GREP_EXEC  "/usr/bin/grep" // change this back!!!!!!!
+#define GREP_EXEC  "/bin/grep"
 #define SORT_EXEC  "/usr/bin/sort"
 #define HEAD_EXEC  "/usr/bin/head"
 
@@ -136,8 +136,7 @@ int main(int argc, char* argv[]){
     char cmdbuf[BSIZE];
     bzero(cmdbuf, BSIZE);
     sprintf(cmdbuf, "%s --lines=%s", HEAD_EXEC, num_files);
-    printf("%s", cmdbuf);
-    fflush(stdout);
+
     char* args[] = {BASH_EXEC, "-c", cmdbuf, (char*) NULL};
     if(execv(BASH_EXEC, args) < 0){
       fprintf(stderr, "Error executing process 3 (ERRNO %d)", errno);
