@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
     }
 
     exit(0);
-    
+
   }
 
   // second process
@@ -129,19 +129,34 @@ int main(int argc, char* argv[]){
     close(p1[1]);
     close(p2[1]);
     close(p3[1]);
-
-    // read message from p1
-    size_t rsize;
-    char buf[BSIZE];
-
-    while((rsize = read(p3[0], buf, BSIZE)) > 0){
-      printf("%s", buf);
-    }
-
-    // close read end
+    // set standard input to the read end of pipe 3
+    dup2(p3[0], STDIN_FILENO);
     close(p3[0]);
 
+    char cmdbuf[BSIZE];
+    bzero(cmdbuf, BSIZE);
+    sprintf(cmdbuf, "%s --lines=%s", HEAD_EXEC, num_files);
+    printf("%s", cmdbuf);
+    fflush(stdout);
+    char* args[] = {BASH_EXEC, "-c", cmdbuf, (char*) NULL};
+    if(execv(BASH_EXEC, args) < 0){
+      fprintf(stderr, "Error executing process 3 (ERRNO %d)", errno);
+      return EXIT_FAILURE;
+    }
+
     exit(0);
+    // // read message from p1
+    // size_t rsize;
+    // char buf[BSIZE];
+    //
+    // while((rsize = read(p3[0], buf, BSIZE)) > 0){
+    //   printf("%s", buf);
+    // }
+    //
+    // // close read end
+    // close(p3[0]);
+    //
+    // exit(0);
   }
 
   // close all pipe ends in main process
