@@ -88,7 +88,7 @@ int main(int argc, char* argv[]){
     }
 
     exit(0);
-    
+
   }
 
   // second process
@@ -101,23 +101,21 @@ int main(int argc, char* argv[]){
     // close unnecessary write ends
     close(p1[1]);
     close(p2[1]);
-
-    // read message from p1
-    size_t rsize;
-    char buf[BSIZE];
-
-    while((rsize = read(p2[0], buf, BSIZE)) > 0);
-
-    // close read end
+    // set standard input to the read end of pipe 2
+    dup2(p2[0], STDIN_FILENO);
     close(p2[0]);
-
-    // forward message
-    write(p3[1], buf, BSIZE);
-
-    // close write end
+    // set standard output to the write end of pipe 3
+    dup2(p3[1], STDOUT_FILENO);
     close(p3[1]);
 
+    char* args[] = {SORT_EXEC, "-t", ":", "+1.0", "-2.0", "--numeric", "--reverse", (char*) NULL};
+    if(execv(SORT_EXEC, args) < 0){
+      fprintf(stderr, "Error executing process 3 (ERRNO %d)", errno);
+      return EXIT_FAILURE;
+    }
+
     exit(0);
+    
   }
 
   // second process
