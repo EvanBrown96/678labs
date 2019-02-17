@@ -1,0 +1,6 @@
+*.o
+*.dSYM
+.DS_Store
+ipc/finder
+debuggers/bugs
+*.tar.gz
