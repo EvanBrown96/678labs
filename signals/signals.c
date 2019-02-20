@@ -6,7 +6,7 @@
 /* first, define the Ctrl-C counter, initialize it with zero. */
 int ctrl_c_count = 0;
 int got_response = 0;
-#define CTRL_C_THRESHOLD  5 
+#define CTRL_C_THRESHOLD  5
 
 /* the Ctrl-C signal handler */
 void catch_int(int sig_num)
@@ -24,7 +24,7 @@ void catch_int(int sig_num)
     if (answer[0] == 'n' || answer[0] == 'N') {
       printf("\nContinuing\n");
       fflush(stdout);
-      /* 
+      /*
        * Reset Ctrl-C counter
        */
       ctrl_c_count = 0;
@@ -51,9 +51,25 @@ int main(int argc, char* argv[])
   sigset_t mask_set;  /* used to set a signal masking set. */
 
   /* setup mask_set */
+  sigfillset(&mask_set);
+
+  sigdelset(&mask_set, SIGALRM);
 
   /* set signal handlers */
 
+  // setup handler for ctrl-C
+  sa.sa_handler = catch_int;
+  // do this? sa.sa_mask =
+  sigaction(SIGINT, &sa, NULL)
+
+  // setup handler for ctrl-Z
+
+  // setup handler for alarm SIGALRM
+
+  // pause loop
+  while(true){
+    pause();
+  }
+
   return 0;
 }
-
