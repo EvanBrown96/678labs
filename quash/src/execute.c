@@ -31,7 +31,7 @@ char* get_current_directory(bool* should_free) {
   getcwd(current_dir, 256);
 
   // Change this to true if necessary
-  *should_free = false;
+  *should_free = true;
 
   return current_dir;
 }
