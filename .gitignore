@@ -4,3 +4,4 @@
 ipc/finder
 debuggers/bugs
 *.tar.gz
+quash/quash
