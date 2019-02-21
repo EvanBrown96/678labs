@@ -30,7 +30,7 @@ char* get_current_directory(bool* should_free) {
   // HINT: This should be pretty simple
 
   char* current_dir = malloc(256*sizeof(char));
-  getcwd(current_dir, 256)
+  getcwd(current_dir, 256);
 
   // Change this to true if necessary
   *should_free = false;
