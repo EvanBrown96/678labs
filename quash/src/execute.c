@@ -26,8 +26,6 @@
 
 // Return a string containing the current working directory.
 char* get_current_directory(bool* should_free) {
-  // TODO: Get the current working directory. This will fix the prompt path.
-  // HINT: This should be pretty simple
 
   char* current_dir = malloc(256*sizeof(char));
   getcwd(current_dir, 256);
