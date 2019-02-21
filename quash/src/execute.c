@@ -28,7 +28,7 @@
 char* get_current_directory(bool* should_free) {
   // TODO: Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
-  char* current_dir = get_current_dir_name();
+  char* current_dir = (char*)get_current_dir_name();
 
   // Change this to true if necessary
   *should_free = false;
@@ -305,9 +305,9 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes, redirects, and new process
   IMPLEMENT_ME();
 
-  //parent_run_command(holder.cmd); // This should be done in the parent branch of
+  parent_run_command(holder.cmd); // This should be done in the parent branch of
                                   // a fork
-  //child_run_command(holder.cmd); // This should be done in the child branch of a fork
+  child_run_command(holder.cmd); // This should be done in the child branch of a fork
 }
 
 // Run a list of commands
