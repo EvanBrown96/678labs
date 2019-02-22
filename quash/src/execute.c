@@ -122,13 +122,8 @@ void run_export(ExportCommand cmd) {
   const char* env_var = cmd.env_var;
   const char* val = cmd.val;
 
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
+  setenv(env_var, val, 1);
 
-  // TODO: Implement export.
-  // HINT: This should be quite simple.
-  IMPLEMENT_ME();
 }
 
 // Changes the current working directory
@@ -142,12 +137,15 @@ void run_cd(CDCommand cmd) {
     return;
   }
 
-  // TODO: Change directory
+  // change directory
+  chdir(dir);
 
-  // TODO: Update the PWD environment variable to be the new current working
-  // directory and optionally update OLD_PWD environment variable to be the old
-  // working directory.
-  IMPLEMENT_ME();
+  // get current PWD value
+  const char* new_dir = lookup_env("PWD");
+
+  // set environment variables
+  setenv("OLD_PWD", new_dir, 1);
+  setenv("PWD", dir, 1);
 }
 
 // Sends a signal to all processes contained in a job
@@ -166,8 +164,8 @@ void run_kill(KillCommand cmd) {
 
 // Prints the current working directory to stdout
 void run_pwd() {
-  // TODO: Print the current working directory
-  IMPLEMENT_ME();
+
+  printf("%s\n", lookup_env("PWD"));
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -313,9 +311,10 @@ void run_script(CommandHolder* holders) {
   if (holders == NULL)
     return;
 
-  check_jobs_bg_status();
+  printf("entered run_script\n");
+  fflush(stdout);
 
-  printf("test");
+  check_jobs_bg_status();
 
   if (get_command_holder_type(holders[0]) == EXIT &&
       get_command_holder_type(holders[1]) == EOC) {
