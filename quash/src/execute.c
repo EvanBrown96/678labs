@@ -315,6 +315,8 @@ void run_script(CommandHolder* holders) {
 
   check_jobs_bg_status();
 
+  printf("test");
+
   if (get_command_holder_type(holders[0]) == EXIT &&
       get_command_holder_type(holders[1]) == EOC) {
     end_main_loop();
