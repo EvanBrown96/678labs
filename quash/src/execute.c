@@ -106,11 +106,12 @@ void run_echo(EchoCommand cmd) {
   // string is always NULL) list of strings.
   char** str = cmd.args;
 
-  // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
-
-  // TODO: Implement echo
-  IMPLEMENT_ME();
+  while(str[0] != NULL){
+    printf("%s ", str[0]);
+    str++;
+  }
+  
+  printf("\n");
 
   // Flush the buffer before returning
   fflush(stdout);
