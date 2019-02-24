@@ -9,6 +9,8 @@
 
 #include "execute.h"
 
+#include "debug.h"
+
 #include <stdio.h>
 
 #include "quash.h"
@@ -20,10 +22,31 @@
  * @brief Note calls to any function that requires implementation
  */
 #define IMPLEMENT_ME()                                                  \
-  fprintf(stderr, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
+  char debug_str[256];  \
+  sprintf(debug_str, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__); \
+  PRINT_DEBUG(debug_str);
+
+/***************************************************************************
+ * Create Types
+ ***************************************************************************/
 
 IMPLEMENT_DEQUE_STRUCT(PIDDeque, pid_t);
 IMPLEMENT_DEQUE(PIDDeque, pid_t);
+
+typedef struct Job{
+  int job_id;
+  char* cmd;
+  PIDDeque pid_list;
+} Job;
+
+IMPLEMENT_DEQUE_STRUCT(JobDeque, Job);
+IMPLEMENT_DEQUE(JobDeque, Job);
+
+//static Job create_job()
+
+/***************************************************************************
+ * Declare Global Variables
+ ***************************************************************************/
 
 // declare job holders
 PIDDeque current_job;
@@ -183,7 +206,12 @@ void run_kill(KillCommand cmd) {
 // Prints the current working directory to stdout
 void run_pwd() {
 
-  printf("%s\n", lookup_env("PWD"));
+  //printf("DOHDD");
+  bool n = true;
+  char* cwd = get_current_directory(&n);
+  printf("%s\n", cwd);
+
+  free(cwd);
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -365,11 +393,11 @@ void run_script(CommandHolder* holders) {
   if (holders == NULL)
     return;
 
-  printf("entered run_script\n");
+  PRINT_DEBUG("entered run_script\n");
   fflush(stdout);
 
   if(!globals_created){
-    printf("creating globals\n");
+    PRINT_DEBUG("creating globals\n");
     current_job = new_PIDDeque(5);
 
     globals_created = true;
@@ -398,16 +426,13 @@ void run_script(CommandHolder* holders) {
 
   if (!(holders[0].flags & BACKGROUND)) {
     int status;
-    printf("waiting for processes...\n");
+    PRINT_DEBUG("waiting for processes...\n");
     while(!is_empty_PIDDeque(&current_job)){
       pid_t pid = pop_front_PIDDeque(&current_job);
-      printf("%d\n", pid);
+      PRINT_DEBUG("%d\n", pid);
       waitpid(pid, &status, 0);
     }
     fflush(stdout);
-    // Not a background Job
-    // TODO: Wait for all processes under the job to complete
-    IMPLEMENT_ME();
   }
   else {
     // A background job.
