@@ -42,7 +42,13 @@ typedef struct Job{
 IMPLEMENT_DEQUE_STRUCT(JobDeque, Job);
 IMPLEMENT_DEQUE(JobDeque, Job);
 
-//static Job create_job()
+static Job create_job(int job_id, PIDDeque pids){
+  return (Job){
+    job_id,
+    get_command_string(),
+    pids
+  };
+}
 
 /***************************************************************************
  * Declare Global Variables
@@ -50,6 +56,8 @@ IMPLEMENT_DEQUE(JobDeque, Job);
 
 // declare job holders
 PIDDeque current_job;
+
+JobDeque bg_jobs;
 
 // declare pipes
 int pipes[2][2];
@@ -61,6 +69,14 @@ bool globals_created = false;
 /***************************************************************************
  * Interface Functions
  ***************************************************************************/
+
+int get_next_job_number(){
+  if(is_empty_JobDeque(&bg_jobs)){
+    return 1;
+  }
+  Job j = peek_back_JobDeque(&bg_jobs);
+  return j.job_id+1;
+}
 
 // Return a string containing the current working directory.
 char* get_current_directory(bool* should_free) {
@@ -106,6 +122,7 @@ void print_job(int job_id, pid_t pid, const char* cmd) {
 
 // Prints a start up message for background processes
 void print_job_bg_start(int job_id, pid_t pid, const char* cmd) {
+
   printf("Background job started: ");
   print_job(job_id, pid, cmd);
 }
@@ -206,7 +223,6 @@ void run_kill(KillCommand cmd) {
 // Prints the current working directory to stdout
 void run_pwd() {
 
-  //printf("DOHDD");
   bool n = true;
   char* cwd = get_current_directory(&n);
   printf("%s\n", cwd);
@@ -399,6 +415,7 @@ void run_script(CommandHolder* holders) {
   if(!globals_created){
     PRINT_DEBUG("creating globals\n");
     current_job = new_PIDDeque(5);
+    bg_jobs = new_JobDeque(1);
 
     globals_created = true;
   }
@@ -435,11 +452,16 @@ void run_script(CommandHolder* holders) {
     fflush(stdout);
   }
   else {
-    // A background job.
-    // TODO: Push the new job to the job queue
-    IMPLEMENT_ME();
 
-    // TODO: Once jobs are implemented, uncomment and fill the following line
-    // print_job_bg_start(job_id, pid, cmd);
+    // create job instance with latest created pids
+    Job j = create_job(get_next_job_number(), current_job);
+    // clear current job deque
+    empty_PIDDeque(&current_job);
+
+    // add new job to the background jobs list
+    push_back_JobDeque(&bg_jobs, j);
+
+    // print job start information
+    print_job_bg_start(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
   }
 }
