@@ -13,12 +13,21 @@
 
 #include "quash.h"
 
+#include "deque.h"
+
 // Remove this and all expansion calls to it
 /**
  * @brief Note calls to any function that requires implementation
  */
 #define IMPLEMENT_ME()                                                  \
   fprintf(stderr, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
+
+IMPLEMENT_DEQUE_STRUCT(PIDDeque, pid_t);
+IMPLEMENT_DEQUE(PIDDeque, pid_t);
+
+PIDDeque current_job;
+
+bool job_holders_created = false;
 
 /***************************************************************************
  * Interface Functions
@@ -90,13 +99,15 @@ void run_generic(GenericCommand cmd) {
   char* exec = cmd.args[0];
   char** args = cmd.args;
 
-  // TODO: Remove warning silencers
-  (void) exec; // Silence unused variable warning
-  (void) args; // Silence unused variable warning
+  execvp(exec, args);
+  // while(args[0] != NULL){
+  //   printf("%s ", args[0]);
+  //   args++;
+  // }
+  //
+  // printf("\n");
 
-  // TODO: Implement run generic
-  IMPLEMENT_ME();
-
+  // this will only execute if the execvp call failed
   perror("ERROR: Failed to execute program");
 }
 
@@ -110,7 +121,7 @@ void run_echo(EchoCommand cmd) {
     printf("%s ", str[0]);
     str++;
   }
-  
+
   printf("\n");
 
   // Flush the buffer before returning
@@ -226,6 +237,8 @@ void child_run_command(Command cmd) {
   default:
     fprintf(stderr, "Unknown command type: %d\n", type);
   }
+
+  exit(0);
 }
 
 /**
@@ -302,9 +315,16 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes, redirects, and new process
   IMPLEMENT_ME();
 
-  parent_run_command(holder.cmd); // This should be done in the parent branch of
-                                  // a fork
-  child_run_command(holder.cmd); // This should be done in the child branch of a fork
+  pid_t pid = fork();
+  push_back_PIDDeque(&current_job, pid);
+
+  if(pid == 0){
+    child_run_command(holder.cmd); // This should be done in the child branch of a fork
+  }
+  else{
+    parent_run_command(holder.cmd); // This should be done in the parent branch of a fork
+  }
+
 }
 
 // Run a list of commands
@@ -314,6 +334,12 @@ void run_script(CommandHolder* holders) {
 
   printf("entered run_script\n");
   fflush(stdout);
+
+  if(!job_holders_created){
+    printf("creating job holders\n");
+    current_job = new_PIDDeque(5);
+    job_holders_created = true;
+  }
 
   check_jobs_bg_status();
 
@@ -330,6 +356,14 @@ void run_script(CommandHolder* holders) {
     create_process(holders[i]);
 
   if (!(holders[0].flags & BACKGROUND)) {
+    int status;
+    printf("waiting for processes...\n");
+    while(!is_empty_PIDDeque(&current_job)){
+      pid_t pid = pop_front_PIDDeque(&current_job);
+      printf("%d\n", pid);
+      waitpid(pid, &status, 0);
+    }
+    fflush(stdout);
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
     IMPLEMENT_ME();
