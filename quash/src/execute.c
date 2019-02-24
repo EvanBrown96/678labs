@@ -25,9 +25,15 @@
 IMPLEMENT_DEQUE_STRUCT(PIDDeque, pid_t);
 IMPLEMENT_DEQUE(PIDDeque, pid_t);
 
+// declare job holders
 PIDDeque current_job;
 
-bool job_holders_created = false;
+// declare pipes
+int pipes[2][2];
+int cur_pipe = 0;
+int old_pipe = 1;
+
+bool globals_created = false;
 
 /***************************************************************************
  * Interface Functions
@@ -315,15 +321,42 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes, redirects, and new process
   IMPLEMENT_ME();
 
+  // create a new pipe
+  pipe(pipes[cur_pipe]);
+
   pid_t pid = fork();
   push_back_PIDDeque(&current_job, pid);
 
   if(pid == 0){
+
+    if(p_in){
+      // redirect input to this process from the previous pipe
+      dup2(pipes[old_pipe][0], STDIN_FILENO);
+    }
+    if(p_out){
+      // redirect output of this process to the next pipe
+      dup2(pipes[cur_pipe][1], STDOUT_FILENO);
+    }
+
+    // close pipes
+    close(pipes[cur_pipe][0]);
+    close(pipes[cur_pipe][1]);
+    close(pipes[old_pipe][0]);
+    close(pipes[old_pipe][1]);
+
     child_run_command(holder.cmd); // This should be done in the child branch of a fork
   }
   else{
     parent_run_command(holder.cmd); // This should be done in the parent branch of a fork
   }
+
+  // close the old pipe, since it will not be used anymore
+  close(pipes[old_pipe][0]);
+  close(pipes[old_pipe][1]);
+
+  // update which pipe index should be used
+  old_pipe = cur_pipe;
+  cur_pipe = (cur_pipe+1)%2;
 
 }
 
@@ -335,10 +368,11 @@ void run_script(CommandHolder* holders) {
   printf("entered run_script\n");
   fflush(stdout);
 
-  if(!job_holders_created){
-    printf("creating job holders\n");
+  if(!globals_created){
+    printf("creating globals\n");
     current_job = new_PIDDeque(5);
-    job_holders_created = true;
+
+    globals_created = true;
   }
 
   check_jobs_bg_status();
@@ -351,9 +385,16 @@ void run_script(CommandHolder* holders) {
 
   CommandType type;
 
+  // initialize old pipe (will not be used, but create_process expected one to exist for all processes)
+  pipe(pipes[old_pipe]);
+
   // Run all commands in the `holder` array
   for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i)
     create_process(holders[i]);
+
+  // close old pipe, for posterity
+  close(pipes[old_pipe][0]);
+  close(pipes[old_pipe][1]);
 
   if (!(holders[0].flags & BACKGROUND)) {
     int status;
