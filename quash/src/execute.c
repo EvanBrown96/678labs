@@ -72,6 +72,15 @@ bool globals_created = false;
  * Declare Useful Functions for operating on types or globals
  ***************************************************************************/
 
+/**
+ * @brief creates a duplicate of a PIDDeque
+ *
+ * the original passed-in PIDDeque is not modified
+ *
+ * @param pid_list the PIDDeque to create a duplicate of
+ *
+ * @return a new PIDDeque which is a duplicate of pid_list
+ */
 PIDDeque duplicate_PIDDeque(PIDDeque* pid_list){
 
   size_t len;
@@ -94,6 +103,8 @@ PIDDeque duplicate_PIDDeque(PIDDeque* pid_list){
 
 /**
  * @brief helper function for returning next available job number for a job
+ *
+ * @return the next available background job number
  */
 int get_next_job_number(){
   if(is_empty_JobDeque(&bg_jobs)){
