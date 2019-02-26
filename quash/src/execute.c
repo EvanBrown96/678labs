@@ -50,6 +50,32 @@ static Job create_job(int job_id, PIDDeque pids){
   };
 }
 
+static PIDDeque duplicate_PIDDeque(PIDDeque* pid_list){
+
+  size_t len;
+  pid_t* raw_list = as_array_PIDDeque(pid_list, &len);
+
+  *pid_list = new_PIDDeque(len);
+  PIDDeque ret = new_PIDDeque(len);
+
+  for(int i = 0; i < len; i++){
+    push_back_PIDDeque(pid_list, raw_list[i]);
+    push_back_PIDDeque(&ret, raw_list[i]);
+  }
+
+  free(raw_list);
+
+  return ret;
+
+}
+
+// static Job duplicate_Job(const Job* j){
+//
+//   PIDDeque new_pid_list = duplicate_PIDDeque(&(j->pid_list));
+//
+//
+// }
+
 /***************************************************************************
  * Declare Global Variables
  ***************************************************************************/
@@ -58,11 +84,14 @@ static Job create_job(int job_id, PIDDeque pids){
 PIDDeque current_job;
 
 JobDeque bg_jobs;
+JobDeque recently_completed;
 
 // declare pipes
 int pipes[2][2];
 int cur_pipe = 0;
 int old_pipe = 1;
+
+int status;
 
 bool globals_created = false;
 
@@ -102,15 +131,68 @@ const char* lookup_env(const char* env_var) {
   return var_val;
 }
 
+void print_bg_jobs_contents(){
+
+  int jobs_start_length = length_JobDeque(&bg_jobs);
+
+  for(int i = 0; i < jobs_start_length; i++){
+
+    Job j = pop_front_JobDeque(&bg_jobs);
+    PIDDeque* pid_list = &j.pid_list;
+    printf("job id: %d; cmd: %s; pids: ", j.job_id, j.cmd);
+
+    int pids_start_length = length_PIDDeque(pid_list);
+
+    for(int j = 0; j < pids_start_length; j++){
+      pid_t pid = pop_front_PIDDeque(pid_list);
+      printf("%d ", pid);
+      push_back_PIDDeque(pid_list, pid);
+    }
+    printf("\n");
+
+    push_back_JobDeque(&bg_jobs, j);
+
+  }
+
+}
+
 // Check the status of background jobs
 void check_jobs_bg_status() {
-  // TODO: Check on the statuses of all processes belonging to all background
-  // jobs. This function should remove jobs from the jobs queue once all
-  // processes belonging to a job have completed.
-  IMPLEMENT_ME();
 
-  // TODO: Once jobs are implemented, uncomment and fill the following line
-  // print_job_bg_complete(job_id, pid, cmd);
+  // get initial length of jobs list
+  int jobs_start_length = length_JobDeque(&bg_jobs);
+
+  for(int i = 0; i < jobs_start_length; i++){
+    // get the next job and its pid information
+    Job j = pop_front_JobDeque(&bg_jobs);
+    PIDDeque pid_list = duplicate_PIDDeque(&j.pid_list);
+    pid_t first_pid = peek_front_PIDDeque(&pid_list);
+
+    // iterate through all of its pids
+    bool done = true;
+    while(!is_empty_PIDDeque(&pid_list)){
+      pid_t pid = pop_front_PIDDeque(&pid_list);
+
+      // waitpid will return 0 if the process is still running
+      int x = waitpid(pid, &status, WNOHANG);
+      if(x == 0){
+        done = false;
+        break;
+      }
+    }
+
+    destroy_PIDDeque(&pid_list);
+
+    if(done){
+      // if the process is done, print a message and add it to recently finished
+      print_job_bg_complete(j.job_id, first_pid, j.cmd);
+      push_back_JobDeque(&recently_completed, j);
+    }
+    else{
+      // if it's not, re-add it to the bg_jobs deque
+      push_back_JobDeque(&bg_jobs, j);
+    }
+  }
 }
 
 // Prints the job id number, the process id of the first process belonging to
@@ -235,8 +317,65 @@ void run_pwd() {
 
 // Prints all background jobs currently in the job list to stdout
 void run_jobs() {
-  // TODO: Print background jobs
-  IMPLEMENT_ME();
+
+  Job j1, j2;
+  int c1 = 0;
+  int c2 = 0;
+  int l1 = length_JobDeque(&bg_jobs);
+  int l2 = length_JobDeque(&recently_completed);
+  int last = 0;
+
+  while(c1 < l1 || c2 < l2){
+    //printf("c1: %d, c2: %d, l1: %d, l2: %d, last: %d\n", c1, c2, l1, l2, last);
+    if(last != 2 && c1 < l1){
+      //printf("pop bg\n");
+      j1 = pop_front_JobDeque(&bg_jobs);
+      c1++;
+    }
+    if(last != 1 && c2 < l2){
+      //printf("pop rc\n");
+      j2 = pop_front_JobDeque(&recently_completed);
+      c2++;
+    }
+
+    if(c2 == l2 || j1.job_id < j2.job_id){
+      print_job(j1.job_id, peek_front_PIDDeque(&(j1.pid_list)), j1.cmd);
+      push_back_JobDeque(&bg_jobs, j1);
+      last = 1;
+    }
+    else{
+      print_job_bg_complete(j2.job_id, peek_front_PIDDeque(&(j2.pid_list)), j2.cmd);
+      last = 2;
+    }
+  }
+  //
+  // while(!is_empty_JobDeque(&bg_jobs) && !is_empty_JobDeque(&recently_completed)){
+  //   if(last != 1){
+  //     j1 = pop_front_JobDeque(&bg_jobs);
+  //   }
+  //   if(last != 2){
+  //     j2 = pop_front_JobDeque(&recently_completed);
+  //   }
+  //
+  //   if(j1.job_id < j2.job_id){
+  //     print_job(j1.job_id, peek_front_PIDDeque(&(j1.pid_list)), j1.cmd);
+  //     push_back_JobDeque(&bg_jobs, j1);
+  //     last = 1;
+  //   }
+  //   else{
+  //     print_job_bg_complete(j2.job_id, peek_front_PIDDeque(&(j2.pid_list)), j2.cmd);
+  //     last = 2;
+  //   }
+  // }
+  //
+  // while(!is_empty_JobDeque(&temp_jobs)){
+  //   j1 = pop_front_JobDeque(&bg_jobs);
+  //   print_job(j1.job_id, peek_front_PIDDeque(&(j1.pid_list)), j1.cmd);
+  // }
+  //
+  // while(!is_empty_JobDeque(&recently_completed)){
+  //   print_job_bg_complete(j2.job_id, peek_front_PIDDeque(&(j2.pid_list)), j2.cmd);
+  // }
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -413,13 +552,16 @@ void run_script(CommandHolder* holders) {
   fflush(stdout);
 
   if(!globals_created){
+    // initialize deques if this is the first time into the run_script command
     PRINT_DEBUG("creating globals\n");
     current_job = new_PIDDeque(5);
     bg_jobs = new_JobDeque(1);
+    recently_completed = new_JobDeque(1);
 
     globals_created = true;
   }
 
+  // print_bg_jobs_contents();
   check_jobs_bg_status();
 
   if (get_command_holder_type(holders[0]) == EXIT &&
@@ -442,26 +584,33 @@ void run_script(CommandHolder* holders) {
   close(pipes[old_pipe][1]);
 
   if (!(holders[0].flags & BACKGROUND)) {
-    int status;
+
     PRINT_DEBUG("waiting for processes...\n");
+    // go through every pid in the current job
     while(!is_empty_PIDDeque(&current_job)){
       pid_t pid = pop_front_PIDDeque(&current_job);
       PRINT_DEBUG("%d\n", pid);
+      // wait until this pid exits
       waitpid(pid, &status, 0);
     }
     fflush(stdout);
+
   }
   else {
 
-    // create job instance with latest created pids
-    Job j = create_job(get_next_job_number(), current_job);
+    // create duplicate of current job pid deque for addition to background job deque
+    PIDDeque dup = duplicate_PIDDeque(&current_job);
     // clear current job deque
     empty_PIDDeque(&current_job);
+
+    // create job instance with current job pids
+    Job j = create_job(get_next_job_number(), dup);
 
     // add new job to the background jobs list
     push_back_JobDeque(&bg_jobs, j);
 
     // print job start information
     print_job_bg_start(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
+    
   }
 }
