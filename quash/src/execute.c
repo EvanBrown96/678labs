@@ -29,7 +29,7 @@
   PRINT_DEBUG(debug_str);
 
 /***************************************************************************
- * Create Types
+ * Create Types & Type Management Functions
  ***************************************************************************/
 
 IMPLEMENT_DEQUE_STRUCT(PIDDeque, pid_t);
@@ -44,6 +44,70 @@ typedef struct Job{
 
 IMPLEMENT_DEQUE_STRUCT(JobDeque, Job);
 IMPLEMENT_DEQUE(JobDeque, Job);
+
+
+
+
+
+/**
+* @brief creates a duplicate of a PIDDeque
+*
+* the original passed-in PIDDeque is not modified
+*
+* @param pid_list the PIDDeque to create a duplicate of
+*
+* @return a new PIDDeque which is a duplicate of pid_list
+*/
+PIDDeque duplicate_PIDDeque(PIDDeque* pid_list){
+
+ size_t len;
+ pid_t* raw_list = as_array_PIDDeque(pid_list, &len);
+
+ *pid_list = new_PIDDeque(len);
+ PIDDeque ret = new_PIDDeque(len);
+
+ for(int i = 0; i < len; i++){
+   push_back_PIDDeque(pid_list, raw_list[i]);
+   push_back_PIDDeque(&ret, raw_list[i]);
+ }
+
+ free(raw_list);
+
+ return ret;
+
+}
+
+
+
+/**
+* @brief creates a job with the given pid deque
+*
+* job will be given next available job number after those already in the background deque
+* job will be assigned a command string based on latest command passed in
+* the pids passed in are copied and will NOT be affected by their inclusion
+*
+* @param job_id the id number to assign to the job
+*
+* @param pids deque containing the pids running under this job
+*
+* @return the created job
+*/
+Job create_job(int job_id, PIDDeque* pids){
+ return (Job){
+   job_id,
+   get_command_string(),
+   duplicate_PIDDeque(pids),
+   false
+ };
+}
+
+
+
+void destroy_job(Job j){
+
+ destroy_PIDDeque(&(j.pid_list));
+
+}
 
 
 
@@ -69,72 +133,21 @@ bool globals_created = false;
 
 
 /***************************************************************************
- * Declare Useful Functions for operating on types or globals
+ * Declare Useful Global Functions
  ***************************************************************************/
 
-/**
- * @brief creates a duplicate of a PIDDeque
- *
- * the original passed-in PIDDeque is not modified
- *
- * @param pid_list the PIDDeque to create a duplicate of
- *
- * @return a new PIDDeque which is a duplicate of pid_list
- */
-PIDDeque duplicate_PIDDeque(PIDDeque* pid_list){
-
-  size_t len;
-  pid_t* raw_list = as_array_PIDDeque(pid_list, &len);
-
-  *pid_list = new_PIDDeque(len);
-  PIDDeque ret = new_PIDDeque(len);
-
-  for(int i = 0; i < len; i++){
-    push_back_PIDDeque(pid_list, raw_list[i]);
-    push_back_PIDDeque(&ret, raw_list[i]);
-  }
-
-  free(raw_list);
-
-  return ret;
-
-}
-
-
-/**
- * @brief helper function for returning next available job number for a job
- *
- * @return the next available background job number
- */
-int get_next_job_number(){
-  if(is_empty_JobDeque(&bg_jobs)){
-    return 1;
-  }
-  Job j = peek_back_JobDeque(&bg_jobs);
-  return j.job_id+1;
-}
-
-
-
-/**
- * @brief creates a job with the given pid deque
- *
- * job will be given next available job number after those already in the background deque
- * job will be assigned a command string based on latest command passed in
- * the pids passed in are copied and will NOT be affected by their inclusion
- *
- * @param pids deque containing the pids running under this job
- *
- * @return the created job
- */
-Job create_job(PIDDeque* pids){
-  return (Job){
-    get_next_job_number(),
-    get_command_string(),
-    duplicate_PIDDeque(pids),
-    false
-  };
-}
+ /**
+  * @brief helper function for returning next available job number for a job
+  *
+  * @return the next available background job number
+  */
+ int get_next_job_number(){
+   if(is_empty_JobDeque(&bg_jobs)){
+     return 1;
+   }
+   Job j = peek_back_JobDeque(&bg_jobs);
+   return j.job_id+1;
+ }
 
 
 
@@ -206,33 +219,36 @@ void check_jobs_bg_status() {
   for(int i = 0; i < jobs_start_length; i++){
     // get the next job and its pid information
     Job j = pop_front_JobDeque(&bg_jobs);
-    PIDDeque pid_list = duplicate_PIDDeque(&j.pid_list);
-    pid_t first_pid = peek_front_PIDDeque(&pid_list);
 
-    // iterate through all of its pids
-    bool done = true;
-    while(!is_empty_PIDDeque(&pid_list)){
-      pid_t pid = pop_front_PIDDeque(&pid_list);
+    if(!j.completed){
+      PIDDeque pid_list = duplicate_PIDDeque(&j.pid_list);
+      pid_t first_pid = peek_front_PIDDeque(&pid_list);
 
-      // waitpid will return 0 if the process is still running
-      int x = waitpid(pid, &status, WNOHANG);
-      if(x == 0){
-        done = false;
-        break;
+      // iterate through all of its pids
+      bool done = true;
+      while(!is_empty_PIDDeque(&pid_list)){
+        pid_t pid = pop_front_PIDDeque(&pid_list);
+
+        // waitpid will return 0 if the process is still running
+        int x = waitpid(pid, &status, WNOHANG);
+        if(x == 0){
+          done = false;
+          break;
+        }
+      }
+
+      destroy_PIDDeque(&pid_list);
+
+      if(done){
+        // if the process is done, print a message and set its state to complete
+        print_job_bg_complete(j.job_id, first_pid, j.cmd);
+        j.completed = true;
       }
     }
 
-    destroy_PIDDeque(&pid_list);
+    // re-add popped job to the jobs queue
+    push_back_JobDeque(&bg_jobs, j);
 
-    if(done){
-      // if the process is done, print a message and add it to recently finished
-      print_job_bg_complete(j.job_id, first_pid, j.cmd);
-      //push_back_JobDeque(&recently_completed, j);
-    }
-    else{
-      // if it's not, re-add it to the bg_jobs deque
-      push_back_JobDeque(&bg_jobs, j);
-    }
   }
 }
 
@@ -344,13 +360,37 @@ void run_cd(CDCommand cmd) {
 void run_kill(KillCommand cmd) {
   int signal = cmd.sig;
   int job_id = cmd.job;
+  bool killed = false;
 
-  // TODO: Remove warning silencers
-  (void) signal; // Silence unused variable warning
-  (void) job_id; // Silence unused variable warning
+  int jobs_start_length = length_JobDeque(&bg_jobs);
+  for(int i = 0; i < jobs_start_length; i++){
+    Job j = pop_front_JobDeque(&bg_jobs);
 
-  // TODO: Kill all processes associated with a background job
-  IMPLEMENT_ME();
+    if(j.job_id == job_id){
+      killed = true;
+      if(j.completed){
+        fprintf(stderr, "ERR: job with that id has already completed\n");
+      }
+      else{
+        PIDDeque pid_list = duplicate_PIDDeque(&(j.pid_list));
+
+        while(!is_empty_PIDDeque(&pid_list)){
+          kill(pop_front_PIDDeque(&pid_list), signal);
+        }
+
+        destroy_PIDDeque(&pid_list);
+
+        //j.completed = true;
+      }
+    }
+
+    push_back_JobDeque(&bg_jobs, j);
+  }
+
+  if(!killed){
+    fprintf(stderr, "ERR: job found with given id\n");
+  }
+
 }
 
 
@@ -373,6 +413,20 @@ void run_pwd() {
 // Prints all background jobs currently in the job list to stdout
 void run_jobs() {
 
+  int jobs_start_length = length_JobDeque(&bg_jobs);
+
+  for(int i = 0; i < jobs_start_length; i++){
+    Job j = pop_front_JobDeque(&bg_jobs);
+
+    if(j.completed){
+      print_job_bg_complete(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
+      destroy_job(j);
+    }
+    else{
+      print_job(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
+      push_back_JobDeque(&bg_jobs, j);
+    }
+  }
   // Job j1, j2;
   // int c1 = 0;
   // int c2 = 0;
@@ -545,7 +599,6 @@ void create_process(CommandHolder holder) {
   if(pid == 0){
 
     // setup pipes
-
     if(p_in){
       // redirect input to this process from the previous pipe
       dup2(pipes[old_pipe][0], STDIN_FILENO);
@@ -612,7 +665,7 @@ void run_script(CommandHolder* holders) {
     // initialize deques if this is the first time into the run_script command
     PRINT_DEBUG("creating globals\n");
     current_job = new_PIDDeque(5);
-    bg_jobs = new_JobDeque(1);
+    bg_jobs = new_destructable_JobDeque(1, destroy_job);
     //recently_completed = new_JobDeque(1);
 
     globals_created = true;
@@ -656,7 +709,7 @@ void run_script(CommandHolder* holders) {
   else {
 
     // create job instance with current job pids
-    Job j = create_job(&current_job);
+    Job j = create_job(get_next_job_number(), &current_job);
 
     // clear current job deque
     empty_PIDDeque(&current_job);
