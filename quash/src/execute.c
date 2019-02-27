@@ -9,8 +9,6 @@
 
 #include "execute.h"
 
-#include "debug.h"
-
 #include <stdio.h>
 
 #include "quash.h"
@@ -19,14 +17,11 @@
 
 #include <fcntl.h>
 
-// Remove this and all expansion calls to it
-/**
- * @brief Note calls to any function that requires implementation
- */
-#define IMPLEMENT_ME()                                                  \
-  char debug_str[256];  \
-  sprintf(debug_str, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__); \
-  PRINT_DEBUG(debug_str);
+#include <sys/wait.h>
+
+#include <signal.h>
+
+
 
 /***************************************************************************
  * Create Types & Type Management Functions
@@ -39,14 +34,10 @@ typedef struct Job{
   int job_id;
   char* cmd;
   PIDDeque pid_list;
-  bool completed;
 } Job;
 
 IMPLEMENT_DEQUE_STRUCT(JobDeque, Job);
 IMPLEMENT_DEQUE(JobDeque, Job);
-
-
-
 
 
 /**
@@ -96,16 +87,21 @@ Job create_job(int job_id, PIDDeque* pids){
  return (Job){
    job_id,
    get_command_string(),
-   duplicate_PIDDeque(pids),
-   false
+   duplicate_PIDDeque(pids)
  };
 }
 
 
 
+/**
+ * @brief frees any memory associated with the passed-in job
+ *
+ * @param j the job to destroy
+ */
 void destroy_job(Job j){
 
  destroy_PIDDeque(&(j.pid_list));
+ free(j.cmd);
 
 }
 
@@ -119,7 +115,6 @@ void destroy_job(Job j){
 PIDDeque current_job;
 
 JobDeque bg_jobs;
-//JobDeque recently_completed;
 
 // declare pipes
 int pipes[2][2];
@@ -151,6 +146,20 @@ bool globals_created = false;
 
 
 
+/**
+ * @brief destroys all globals declared in execute.c
+ *
+ * should be called upon exit of program
+ */
+void cleanup_globals(){
+
+  destroy_PIDDeque(&current_job);
+  destroy_JobDeque(&bg_jobs);
+
+}
+
+
+
 /***************************************************************************
  * Interface Functions
  ***************************************************************************/
@@ -161,7 +170,7 @@ char* get_current_directory(bool* should_free) {
   char* current_dir = malloc(256*sizeof(char));
   getcwd(current_dir, 256);
 
-  // Change this to true if necessary
+  // we allocated the memory for current_dir, so it should be freed
   *should_free = true;
 
   return current_dir;
@@ -171,42 +180,11 @@ char* get_current_directory(bool* should_free) {
 
 // Returns the value of an environment variable env_var
 const char* lookup_env(const char* env_var) {
-  // TODO: Lookup environment variables. This is required for parser to be able
-  // to interpret variables from the command line and display the prompt
-  // correctly
-  // HINT: This should be pretty simple
 
   char* var_val = getenv(env_var);
 
   return var_val;
 }
-
-
-
-// void print_bg_jobs_contents(){
-//
-//   int jobs_start_length = length_JobDeque(&bg_jobs);
-//
-//   for(int i = 0; i < jobs_start_length; i++){
-//
-//     Job j = pop_front_JobDeque(&bg_jobs);
-//     PIDDeque* pid_list = &j.pid_list;
-//     printf("job id: %d; cmd: %s; pids: ", j.job_id, j.cmd);
-//
-//     int pids_start_length = length_PIDDeque(pid_list);
-//
-//     for(int j = 0; j < pids_start_length; j++){
-//       pid_t pid = pop_front_PIDDeque(pid_list);
-//       printf("%d ", pid);
-//       push_back_PIDDeque(pid_list, pid);
-//     }
-//     printf("\n");
-//
-//     push_back_JobDeque(&bg_jobs, j);
-//
-//   }
-//
-// }
 
 
 
@@ -220,34 +198,33 @@ void check_jobs_bg_status() {
     // get the next job and its pid information
     Job j = pop_front_JobDeque(&bg_jobs);
 
-    if(!j.completed){
-      PIDDeque pid_list = duplicate_PIDDeque(&j.pid_list);
-      pid_t first_pid = peek_front_PIDDeque(&pid_list);
+    PIDDeque pid_list = duplicate_PIDDeque(&j.pid_list);
+    pid_t first_pid = peek_front_PIDDeque(&pid_list);
 
-      // iterate through all of its pids
-      bool done = true;
-      while(!is_empty_PIDDeque(&pid_list)){
-        pid_t pid = pop_front_PIDDeque(&pid_list);
+    // iterate through all of its pids
+    bool done = true;
+    while(!is_empty_PIDDeque(&pid_list)){
+      pid_t pid = pop_front_PIDDeque(&pid_list);
 
-        // waitpid will return 0 if the process is still running
-        int x = waitpid(pid, &status, WNOHANG);
-        if(x == 0){
-          done = false;
-          break;
-        }
-      }
-
-      destroy_PIDDeque(&pid_list);
-
-      if(done){
-        // if the process is done, print a message and set its state to complete
-        print_job_bg_complete(j.job_id, first_pid, j.cmd);
-        j.completed = true;
+      // waitpid will return 0 if the process is still running
+      int x = waitpid(pid, &status, WNOHANG);
+      if(x == 0){
+        done = false;
+        break;
       }
     }
 
-    // re-add popped job to the jobs queue
-    push_back_JobDeque(&bg_jobs, j);
+    destroy_PIDDeque(&pid_list);
+
+    if(done){
+      // if the process is done, print a message and destroy its data
+      print_job_bg_complete(j.job_id, first_pid, j.cmd);
+      destroy_job(j);
+    }
+    else{
+      // otherwise re-add popped job to the jobs queue
+      push_back_JobDeque(&bg_jobs, j);
+    }
 
   }
 }
@@ -363,30 +340,32 @@ void run_kill(KillCommand cmd) {
   bool killed = false;
 
   int jobs_start_length = length_JobDeque(&bg_jobs);
+  // we must iterate through ALL the jobs since they are popped and readded
+  // to the bg_jobs deque - otherwise they will end up out of order
   for(int i = 0; i < jobs_start_length; i++){
     Job j = pop_front_JobDeque(&bg_jobs);
 
     if(j.job_id == job_id){
+      // notify that a job meeting the job id was found
       killed = true;
-      if(j.completed){
-        fprintf(stderr, "ERR: job with that id has already completed\n");
+
+      PIDDeque pid_list = duplicate_PIDDeque(&(j.pid_list));
+
+      // kill all the processes in the job
+      while(!is_empty_PIDDeque(&pid_list)){
+        kill(pop_front_PIDDeque(&pid_list), signal);
       }
-      else{
-        PIDDeque pid_list = duplicate_PIDDeque(&(j.pid_list));
 
-        while(!is_empty_PIDDeque(&pid_list)){
-          kill(pop_front_PIDDeque(&pid_list), signal);
-        }
+      destroy_PIDDeque(&pid_list);
 
-        destroy_PIDDeque(&pid_list);
-
-        //j.completed = true;
-      }
     }
 
+    // add the job back to the pid queue - it should stay there until the next
+    // command is run, where it will print a completion notice and be removed
     push_back_JobDeque(&bg_jobs, j);
   }
 
+  // if no job was found with the given id, print an error
   if(!killed){
     fprintf(stderr, "ERR: job found with given id\n");
   }
@@ -418,45 +397,10 @@ void run_jobs() {
   for(int i = 0; i < jobs_start_length; i++){
     Job j = pop_front_JobDeque(&bg_jobs);
 
-    if(j.completed){
-      print_job_bg_complete(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
-      destroy_job(j);
-    }
-    else{
-      print_job(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
-      push_back_JobDeque(&bg_jobs, j);
-    }
+    print_job(j.job_id, peek_front_PIDDeque(&(j.pid_list)), j.cmd);
+    push_back_JobDeque(&bg_jobs, j);
+
   }
-  // Job j1, j2;
-  // int c1 = 0;
-  // int c2 = 0;
-  // int l1 = length_JobDeque(&bg_jobs);
-  // int l2 = length_JobDeque(&recently_completed);
-  // int last = 0;
-  //
-  // while(c1 < l1 || c2 < l2){
-  //   //printf("c1: %d, c2: %d, l1: %d, l2: %d, last: %d\n", c1, c2, l1, l2, last);
-  //   if(last != 2 && c1 < l1){
-  //     //printf("pop bg\n");
-  //     j1 = pop_front_JobDeque(&bg_jobs);
-  //     c1++;
-  //   }
-  //   if(last != 1 && c2 < l2){
-  //     //printf("pop rc\n");
-  //     j2 = pop_front_JobDeque(&recently_completed);
-  //     c2++;
-  //   }
-  //
-  //   if(c2 == l2 || j1.job_id < j2.job_id){
-  //     print_job(j1.job_id, peek_front_PIDDeque(&(j1.pid_list)), j1.cmd);
-  //     push_back_JobDeque(&bg_jobs, j1);
-  //     last = 1;
-  //   }
-  //   else{
-  //     print_job_bg_complete(j2.job_id, peek_front_PIDDeque(&(j2.pid_list)), j2.cmd);
-  //     last = 2;
-  //   }
-  // }
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -581,13 +525,6 @@ void create_process(CommandHolder holder) {
   bool r_app = holder.flags & REDIRECT_APPEND; // This can only be true if r_out
                                                // is true
 
-  (void) r_in;  // Silence unused variable warning
-  (void) r_out; // Silence unused variable warning
-  (void) r_app; // Silence unused variable warning
-
-  // TODO: Setup pipes, redirects, and new process
-  IMPLEMENT_ME();
-
   // create a new pipe
   pipe(pipes[cur_pipe]);
 
@@ -622,7 +559,6 @@ void create_process(CommandHolder holder) {
     }
 
     if(r_out){
-
       // use default file permissions when creating file of -rw-r--r--
       int out_fd;
       if(r_app){
@@ -659,21 +595,21 @@ void run_script(CommandHolder* holders) {
   if (holders == NULL)
     return;
 
-  PRINT_DEBUG("entered run_script\n");
-
   if(!globals_created){
     // initialize deques if this is the first time into the run_script command
-    PRINT_DEBUG("creating globals\n");
     current_job = new_PIDDeque(5);
     bg_jobs = new_destructable_JobDeque(1, destroy_job);
-    //recently_completed = new_JobDeque(1);
+
+    // set queue cleanup function to run at exit
+    atexit(cleanup_globals);
 
     globals_created = true;
   }
 
-  // print_bg_jobs_contents();
+  // check if any jobs have completed since last command
   check_jobs_bg_status();
 
+  // check if we should exit
   if (get_command_holder_type(holders[0]) == EXIT &&
       get_command_holder_type(holders[1]) == EOC) {
     end_main_loop();
@@ -694,12 +630,10 @@ void run_script(CommandHolder* holders) {
   close(pipes[old_pipe][1]);
 
   if (!(holders[0].flags & BACKGROUND)) {
-
-    PRINT_DEBUG("waiting for processes...\n");
+    // process is running in foreground
     // go through every pid in the current job
     while(!is_empty_PIDDeque(&current_job)){
       pid_t pid = pop_front_PIDDeque(&current_job);
-      PRINT_DEBUG("%d\n", pid);
       // wait until this pid exits
       waitpid(pid, &status, 0);
     }
