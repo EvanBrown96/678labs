@@ -30,10 +30,14 @@
 IMPLEMENT_DEQUE_STRUCT(PIDDeque, pid_t);
 IMPLEMENT_DEQUE(PIDDeque, pid_t);
 
+/**
+ * @brief abstraction of a job, or a number of inter-related user commands
+ * and the processes associated with them
+ */
 typedef struct Job{
-  int job_id;
-  char* cmd;
-  PIDDeque pid_list;
+  int job_id; /**< id of the job */
+  char* cmd; /**< command input by the user associated with this job */
+  PIDDeque pid_list; /**< list of process ids running under this job */
 } Job;
 
 IMPLEMENT_DEQUE_STRUCT(JobDeque, Job);
@@ -112,18 +116,18 @@ void destroy_job(Job j){
  ***************************************************************************/
 
 // declare job holders
-PIDDeque current_job;
+PIDDeque current_job; /**< contains a list of pids associated with the job running in the foreground */
 
-JobDeque bg_jobs;
+JobDeque bg_jobs; /**< contains all of the jobs executing in the background */
 
 // declare pipes
-int pipes[2][2];
-int cur_pipe = 0;
-int old_pipe = 1;
+int pipes[2][2]; /**< used for piping input and output between processes */
+int cur_pipe = 0; /**< id of the next pipe to be used - pipes are alternated */
+int old_pipe = 1; /**< id of the pipe that was last used (always = cur_pipe+1%2) */
 
-int status;
+int status; /**< used for passing into waitpid and storing returned status */
 
-bool globals_created = false;
+bool globals_created = false; /**< flag if global variables have been initialized in run_script yet */
 
 
 

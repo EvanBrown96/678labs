@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="globals.html"><span>All</span></a></li>
       <li><a href="globals_func.html"><span>Functions</span></a></li>
+      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li><a href="globals_type.html"><span>Typedefs</span></a></li>
       <li><a href="globals_enum.html"><span>Enumerations</span></a></li>
       <li><a href="globals_defs.html"><span>Macros</span></a></li>
@@ -89,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
       <li><a href="#index_n"><span>n</span></a></li>
+      <li><a href="#index_o"><span>o</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_q"><span>q</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
@@ -130,6 +132,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>BACKGROUND
 : <a class="el" href="command_8h.html#a850b2f07a67b73890889e63fb8a49fda">command.h</a>
 </li>
+<li>bg_jobs
+: <a class="el" href="execute_8c.html#af9a05a8f3f0fddf825e04edf197f1581">execute.c</a>
+</li>
 </ul>
 
 
@@ -144,6 +149,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>child_run_command()
 : <a class="el" href="execute_8c.html#ade4b580b9bbc4e0a991d3b11499fb51c">execute.c</a>
 </li>
+<li>cleanup_globals()
+: <a class="el" href="execute_8c.html#aa87a00c5ff32c27f0b5fbe788a760832">execute.c</a>
+</li>
 <li>Command
 : <a class="el" href="command_8h.html#a1de7fd3d42753f181e50db581e6a43d9">command.h</a>
 </li>
@@ -151,10 +159,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="command_8h.html#ab1fd67fd747d8aee5d690bb1bd549d83">command.h</a>
 </li>
 <li>CommandType
-: <a class="el" href="command_8h.html#aa8311e0de296df9816965be35c31d925">command.h</a>
+: <a class="el" href="command_8h.html#a21e038f5b8958e203d28bc4f18472352">command.h</a>
+</li>
+<li>create_job()
+: <a class="el" href="execute_8c.html#ac36af032c94012535a82ba2f97ecf7d5">execute.c</a>
 </li>
 <li>create_process()
 : <a class="el" href="execute_8c.html#acffe0d67f5dfe68ccf3765cf8ae29dab">execute.c</a>
+</li>
+<li>cur_pipe
+: <a class="el" href="execute_8c.html#a618cd026a064d6b164288754acd135c7">execute.c</a>
+</li>
+<li>current_job
+: <a class="el" href="execute_8c.html#a79a9470660ed8ec0690b46402c5047ba">execute.c</a>
 </li>
 </ul>
 
@@ -167,11 +184,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>destroy_Example()
 : <a class="el" href="deque_8h.html#ad9998ed1cadaff66c209e8b666185f70">deque.h</a>
 </li>
+<li>destroy_job()
+: <a class="el" href="execute_8c.html#a721ea14470dcd07b04aa5a2ac3819fa5">execute.c</a>
+</li>
 <li>destroy_memory_pool()
 : <a class="el" href="memory__pool_8h.html#a2a8f807565226a955c94a2c4670ba65f">memory_pool.h</a>
 </li>
 <li>destroy_parser()
 : <a class="el" href="parsing__interface_8h.html#a659361d40550d9776b6ea7fa69a836ce">parsing_interface.h</a>
+</li>
+<li>duplicate_PIDDeque()
+: <a class="el" href="execute_8c.html#abbd9e8e3e12e18e5445d1cd018043153">execute.c</a>
 </li>
 </ul>
 
@@ -184,8 +207,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="deque_8h.html#ab8ed3578aa5708a09831653caaa88b8a">deque.h</a>
 </li>
 <li>end_main_loop()
-: <a class="el" href="quash_8h.html#a4d364efdccd1dec2290413c6ae28959c">quash.h</a>
-, <a class="el" href="quash_8c.html#a4d364efdccd1dec2290413c6ae28959c">quash.c</a>
+: <a class="el" href="quash_8c.html#a4d364efdccd1dec2290413c6ae28959c">quash.c</a>
+, <a class="el" href="quash_8h.html#a4d364efdccd1dec2290413c6ae28959c">quash.h</a>
 </li>
 <li>EOCCommand
 : <a class="el" href="command_8h.html#ae5bf5cf7a34428c221f28179034dd125">command.h</a>
@@ -215,12 +238,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="quash_8h.html#ab43880685b2507434e4a84f2cb9d54d4">quash.h</a>
 </li>
 <li>get_command_type()
-: <a class="el" href="command_8h.html#a1708aa65874060aa7ef99bf9e1671f5c">command.h</a>
-, <a class="el" href="command_8c.html#a1708aa65874060aa7ef99bf9e1671f5c">command.c</a>
+: <a class="el" href="command_8c.html#a1708aa65874060aa7ef99bf9e1671f5c">command.c</a>
+, <a class="el" href="command_8h.html#a1708aa65874060aa7ef99bf9e1671f5c">command.h</a>
 </li>
 <li>get_current_directory()
-: <a class="el" href="execute_8h.html#acd83b7572960ddecb86a6f96d82fa040">execute.h</a>
-, <a class="el" href="execute_8c.html#acd83b7572960ddecb86a6f96d82fa040">execute.c</a>
+: <a class="el" href="execute_8c.html#acd83b7572960ddecb86a6f96d82fa040">execute.c</a>
+, <a class="el" href="execute_8h.html#acd83b7572960ddecb86a6f96d82fa040">execute.h</a>
+</li>
+<li>get_next_job_number()
+: <a class="el" href="execute_8c.html#af6b831edce2ff42e657ec9dcc263c430">execute.c</a>
+</li>
+<li>globals_created
+: <a class="el" href="execute_8c.html#a12a7ab5ffcb26703821acfc8d6e6cc88">execute.c</a>
 </li>
 </ul>
 
@@ -230,16 +259,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="debug_8h.html#abcf0d5a50dd7e407cd464c1afbd27554">debug.h</a>
 </li>
 <li>IMPLEMENT_DEQUE
-: <a class="el" href="deque_8h.html#a283e81072037376be2a17b25b1eb1601">deque.h</a>
+: <a class="el" href="deque_8h.html#a71fbe309fa88eb8d294b141f33d81233">deque.h</a>
 </li>
 <li>IMPLEMENT_DEQUE_MEMORY_POOL
-: <a class="el" href="memory__pool_8h.html#a1856c82f260a610e5036434162f5bcb0">memory_pool.h</a>
+: <a class="el" href="memory__pool_8h.html#af0b4f70c946b30e8828eaa413e65819b">memory_pool.h</a>
 </li>
 <li>IMPLEMENT_DEQUE_STRUCT
-: <a class="el" href="deque_8h.html#ad1734634a88d702478c08e26e39dc7b8">deque.h</a>
-</li>
-<li>IMPLEMENT_ME
-: <a class="el" href="execute_8c.html#aed9cdd9fcf6575f8a352f61c5e13cb5d">execute.c</a>
+: <a class="el" href="deque_8h.html#a091cfc1289538b13036bcd36d12a3c01">deque.h</a>
 </li>
 <li>initialize_memory_pool()
 : <a class="el" href="memory__pool_8h.html#a1ad04a8d891de237fc5d91191c569777">memory_pool.h</a>
@@ -251,17 +277,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="deque_8h.html#a43fb8662cb9960b573bc2368b27a915c">deque.h</a>
 </li>
 <li>is_running()
-: <a class="el" href="quash_8h.html#a61da580fc69a74f3ef17956ba5fd88a0">quash.h</a>
-, <a class="el" href="quash_8c.html#a61da580fc69a74f3ef17956ba5fd88a0">quash.c</a>
+: <a class="el" href="quash_8c.html#a61da580fc69a74f3ef17956ba5fd88a0">quash.c</a>
+, <a class="el" href="quash_8h.html#a61da580fc69a74f3ef17956ba5fd88a0">quash.h</a>
 </li>
 <li>is_tty()
-: <a class="el" href="quash_8h.html#a52e7329f9f0f1beccbcc84378c1cb748">quash.h</a>
-, <a class="el" href="quash_8c.html#a52e7329f9f0f1beccbcc84378c1cb748">quash.c</a>
+: <a class="el" href="quash_8c.html#a52e7329f9f0f1beccbcc84378c1cb748">quash.c</a>
+, <a class="el" href="quash_8h.html#a52e7329f9f0f1beccbcc84378c1cb748">quash.h</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_j"></a>- j -</h3><ul>
+<li>Job
+: <a class="el" href="execute_8c.html#a43f474f2604b8d14220eb351aae2b33e">execute.c</a>
+</li>
 <li>JobsCommand
 : <a class="el" href="command_8h.html#a027de4ed5fe4b0313c6c8ee0c2c1806b">command.h</a>
 </li>
@@ -280,8 +309,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="deque_8h.html#ab751404fe5166cbc70dc8093b5167839">deque.h</a>
 </li>
 <li>lookup_env()
-: <a class="el" href="execute_8h.html#afeab372587374ba444aa9bdfb6cfa0d8">execute.h</a>
-, <a class="el" href="execute_8c.html#afeab372587374ba444aa9bdfb6cfa0d8">execute.c</a>
+: <a class="el" href="execute_8c.html#afeab372587374ba444aa9bdfb6cfa0d8">execute.c</a>
+, <a class="el" href="execute_8h.html#afeab372587374ba444aa9bdfb6cfa0d8">execute.h</a>
 </li>
 </ul>
 
@@ -317,8 +346,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="command_8h.html#a60697d98410555ac18a86b2f544eea35">command.h</a>
 </li>
 <li>mk_export_command()
-: <a class="el" href="command_8h.html#a284929366e9d674109fec7c9872958d8">command.h</a>
-, <a class="el" href="command_8c.html#a284929366e9d674109fec7c9872958d8">command.c</a>
+: <a class="el" href="command_8c.html#a284929366e9d674109fec7c9872958d8">command.c</a>
+, <a class="el" href="command_8h.html#a284929366e9d674109fec7c9872958d8">command.h</a>
 </li>
 <li>mk_generic_command()
 : <a class="el" href="command_8c.html#aacc43eef331547248883e982f656059a">command.c</a>
@@ -333,8 +362,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="command_8h.html#a33d431b7e34f5f063827109085810eac">command.h</a>
 </li>
 <li>mk_pwd_command()
-: <a class="el" href="command_8h.html#ab18329e0efa0ff9bff9f41377d85c39d">command.h</a>
-, <a class="el" href="command_8c.html#ab18329e0efa0ff9bff9f41377d85c39d">command.c</a>
+: <a class="el" href="command_8c.html#ab18329e0efa0ff9bff9f41377d85c39d">command.c</a>
+, <a class="el" href="command_8h.html#ab18329e0efa0ff9bff9f41377d85c39d">command.h</a>
 </li>
 <li>mk_redirect()
 : <a class="el" href="parsing__interface_8h.html#a37ef8319c5cfcaa8f21a830f6717fae1">parsing_interface.h</a>
@@ -348,6 +377,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>new_Example()
 : <a class="el" href="deque_8h.html#ae0c6f52c89e2b087e19e3062186144da">deque.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>old_pipe
+: <a class="el" href="execute_8c.html#aba840807de345477172309cf88dde7dc">execute.c</a>
 </li>
 </ul>
 
@@ -371,6 +407,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>PIPE_OUT
 : <a class="el" href="command_8h.html#af2aa1b20c10d6507c47f11588e21c324">command.h</a>
 </li>
+<li>pipes
+: <a class="el" href="execute_8c.html#a281943ca96e4f630234f58ced77a03e8">execute.c</a>
+</li>
 <li>pop_back_Example()
 : <a class="el" href="deque_8h.html#aa3a49a1ed1aac021037fe94820ed8c95">deque.h</a>
 </li>
@@ -393,7 +432,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="execute_8h.html#ae6dddf9eadf2166be12825dd40dbd644">execute.h</a>
 </li>
 <li>PROTOTYPE_DEQUE
-: <a class="el" href="deque_8h.html#a20e8006e6767304fca356f057bc319f4">deque.h</a>
+: <a class="el" href="deque_8h.html#af9dc10c0d5c775afe3053629e39f8c36">deque.h</a>
 </li>
 <li>push_back_Example()
 : <a class="el" href="deque_8h.html#a63a0566b60e881121b5ba029a25cb9ae">deque.h</a>
@@ -432,8 +471,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="execute_8h.html#a8e9aed155e5ccf7e207a8f3ce4789d83">execute.h</a>
 </li>
 <li>run_echo()
-: <a class="el" href="execute_8h.html#a550f8e50935c3911e6926f14e27ba2eb">execute.h</a>
-, <a class="el" href="execute_8c.html#a550f8e50935c3911e6926f14e27ba2eb">execute.c</a>
+: <a class="el" href="execute_8c.html#a550f8e50935c3911e6926f14e27ba2eb">execute.c</a>
+, <a class="el" href="execute_8h.html#a550f8e50935c3911e6926f14e27ba2eb">execute.h</a>
 </li>
 <li>run_export()
 : <a class="el" href="execute_8c.html#af5fe54ac25f6dbb4e5a7bb7cde156413">execute.c</a>
@@ -452,12 +491,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="execute_8h.html#a2b6a997c9f75fd29fd6e103498ceaaec">execute.h</a>
 </li>
 <li>run_pwd()
-: <a class="el" href="execute_8h.html#a934397f142ab2b63f69628a9db231bac">execute.h</a>
-, <a class="el" href="execute_8c.html#a934397f142ab2b63f69628a9db231bac">execute.c</a>
+: <a class="el" href="execute_8c.html#a934397f142ab2b63f69628a9db231bac">execute.c</a>
+, <a class="el" href="execute_8h.html#a934397f142ab2b63f69628a9db231bac">execute.h</a>
 </li>
 <li>run_script()
-: <a class="el" href="execute_8h.html#a4dab67459028f3b5a60d1a3695933f4b">execute.h</a>
-, <a class="el" href="execute_8c.html#a4dab67459028f3b5a60d1a3695933f4b">execute.c</a>
+: <a class="el" href="execute_8c.html#a4dab67459028f3b5a60d1a3695933f4b">execute.c</a>
+, <a class="el" href="execute_8h.html#a4dab67459028f3b5a60d1a3695933f4b">execute.h</a>
 </li>
 </ul>
 
@@ -465,6 +504,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>SimpleCommand
 : <a class="el" href="command_8h.html#a441aa8b607f4daafbace05e2f90a4a96">command.h</a>
+</li>
+<li>status
+: <a class="el" href="execute_8c.html#a6e27f49150e9a14580fb313cc2777e00">execute.c</a>
 </li>
 </ul>
 

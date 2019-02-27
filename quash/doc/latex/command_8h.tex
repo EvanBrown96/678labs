@@ -232,7 +232,7 @@ Commands that take any number of arguments and are not built into Quash.
 Alias for {\itshape \hyperlink{structSimpleCommand}{Simple\+Command}} to denote a print jobs list. 
 
 \begin{DoxySeeAlso}{See also}
-\hyperlink{structSimpleCommand}{Simple\+Command}, \hyperlink{unionCommand}{Command}, Job 
+\hyperlink{structSimpleCommand}{Simple\+Command}, \hyperlink{unionCommand}{Command}, \hyperlink{structJob}{Job} 
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!Kill\+Command@{Kill\+Command}}
 \index{Kill\+Command@{Kill\+Command}!command.\+h@{command.\+h}}
@@ -286,7 +286,7 @@ These are useful for recovering what the actual type of a command is if the comm
 \subsection{Function Documentation}
 \index{command.\+h@{command.\+h}!debug\+\_\+print\+\_\+script@{debug\+\_\+print\+\_\+script}}
 \index{debug\+\_\+print\+\_\+script@{debug\+\_\+print\+\_\+script}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{debug\+\_\+print\+\_\+script(const Command\+Holder $\ast$holders)}{debug\_print\_script(const CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void debug\+\_\+print\+\_\+script (
+\subsubsection[{\texorpdfstring{debug\+\_\+print\+\_\+script(const Command\+Holder $\ast$holders)}{debug_print_script(const CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void debug\+\_\+print\+\_\+script (
 \begin{DoxyParamCaption}
 \item[{const {\bf Command\+Holder} $\ast$}]{holders}
 \end{DoxyParamCaption}
@@ -308,7 +308,7 @@ This only works when the {\itshape D\+E\+B\+UG} macro is defined
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!get\+\_\+command\+\_\+holder\+\_\+type@{get\+\_\+command\+\_\+holder\+\_\+type}}
 \index{get\+\_\+command\+\_\+holder\+\_\+type@{get\+\_\+command\+\_\+holder\+\_\+type}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{get\+\_\+command\+\_\+holder\+\_\+type(\+Command\+Holder holder)}{get\_command\_holder\_type(CommandHolder holder)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Type} get\+\_\+command\+\_\+holder\+\_\+type (
+\subsubsection[{\texorpdfstring{get\+\_\+command\+\_\+holder\+\_\+type(\+Command\+Holder holder)}{get_command_holder_type(CommandHolder holder)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Type} get\+\_\+command\+\_\+holder\+\_\+type (
 \begin{DoxyParamCaption}
 \item[{{\bf Command\+Holder}}]{holder}
 \end{DoxyParamCaption}
@@ -332,7 +332,7 @@ The resulting Command\+Type of the {\ttfamily cmd} parameter
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!get\+\_\+command\+\_\+type@{get\+\_\+command\+\_\+type}}
 \index{get\+\_\+command\+\_\+type@{get\+\_\+command\+\_\+type}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{get\+\_\+command\+\_\+type(\+Command cmd)}{get\_command\_type(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Type} get\+\_\+command\+\_\+type (
+\subsubsection[{\texorpdfstring{get\+\_\+command\+\_\+type(\+Command cmd)}{get_command_type(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Type} get\+\_\+command\+\_\+type (
 \begin{DoxyParamCaption}
 \item[{{\bf Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -356,7 +356,7 @@ The resulting {\itshape Command\+Type} of the {\ttfamily cmd} parameter
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+cd\+\_\+command@{mk\+\_\+cd\+\_\+command}}
 \index{mk\+\_\+cd\+\_\+command@{mk\+\_\+cd\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+cd\+\_\+command(char $\ast$dir)}{mk\_cd\_command(char *dir)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+cd\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+cd\+\_\+command(char $\ast$dir)}{mk_cd_command(char *dir)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+cd\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{dir}
 \end{DoxyParamCaption}
@@ -378,7 +378,7 @@ realpath(), \hyperlink{unionCommand}{Command}, \hyperlink{structCDCommand}{C\+D\
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+command\+\_\+holder@{mk\+\_\+command\+\_\+holder}}
 \index{mk\+\_\+command\+\_\+holder@{mk\+\_\+command\+\_\+holder}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+command\+\_\+holder(char $\ast$redirect\+\_\+in, char $\ast$redirect\+\_\+out, char flags, Command cmd)}{mk\_command\_holder(char *redirect\_in, char *redirect\_out, char flags, Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Holder} mk\+\_\+command\+\_\+holder (
+\subsubsection[{\texorpdfstring{mk\+\_\+command\+\_\+holder(char $\ast$redirect\+\_\+in, char $\ast$redirect\+\_\+out, char flags, Command cmd)}{mk_command_holder(char *redirect_in, char *redirect_out, char flags, Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command\+Holder} mk\+\_\+command\+\_\+holder (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{redirect\+\_\+in, }
 \item[{char $\ast$}]{redirect\+\_\+out, }
@@ -417,7 +417,7 @@ Copy of constructed \hyperlink{structCommandHolder}{Command\+Holder}
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+echo\+\_\+command@{mk\+\_\+echo\+\_\+command}}
 \index{mk\+\_\+echo\+\_\+command@{mk\+\_\+echo\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+echo\+\_\+command(char $\ast$$\ast$args)}{mk\_echo\_command(char **args)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+echo\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+echo\+\_\+command(char $\ast$$\ast$args)}{mk_echo_command(char **args)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+echo\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{char $\ast$$\ast$}]{args}
 \end{DoxyParamCaption}
@@ -439,7 +439,7 @@ Copy of constructed Echo\+Command as a {\itshape \hyperlink{unionCommand}{Comman
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+eoc@{mk\+\_\+eoc}}
 \index{mk\+\_\+eoc@{mk\+\_\+eoc}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+eoc()}{mk\_eoc()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+eoc (
+\subsubsection[{\texorpdfstring{mk\+\_\+eoc()}{mk_eoc()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+eoc (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -456,7 +456,7 @@ Copy of constructed E\+O\+C\+Command as a {\itshape \hyperlink{unionCommand}{Com
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+exit\+\_\+command@{mk\+\_\+exit\+\_\+command}}
 \index{mk\+\_\+exit\+\_\+command@{mk\+\_\+exit\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+exit\+\_\+command()}{mk\_exit\_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+exit\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+exit\+\_\+command()}{mk_exit_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+exit\+\_\+command (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -473,7 +473,7 @@ Copy of constructed Exit\+Command as a {\itshape \hyperlink{unionCommand}{Comman
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+export\+\_\+command@{mk\+\_\+export\+\_\+command}}
 \index{mk\+\_\+export\+\_\+command@{mk\+\_\+export\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+export\+\_\+command(char $\ast$env\+\_\+var, char $\ast$val)}{mk\_export\_command(char *env\_var, char *val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+export\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+export\+\_\+command(char $\ast$env\+\_\+var, char $\ast$val)}{mk_export_command(char *env_var, char *val)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+export\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{env\+\_\+var, }
 \item[{char $\ast$}]{val}
@@ -498,7 +498,7 @@ Copy of constructed \hyperlink{structExportCommand}{Export\+Command} as a {\itsh
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+generic\+\_\+command@{mk\+\_\+generic\+\_\+command}}
 \index{mk\+\_\+generic\+\_\+command@{mk\+\_\+generic\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+generic\+\_\+command(char $\ast$$\ast$args)}{mk\_generic\_command(char **args)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+generic\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+generic\+\_\+command(char $\ast$$\ast$args)}{mk_generic_command(char **args)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+generic\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{char $\ast$$\ast$}]{args}
 \end{DoxyParamCaption}
@@ -520,7 +520,7 @@ Copy of constructed \hyperlink{structGenericCommand}{Generic\+Command} as a {\it
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+jobs\+\_\+command@{mk\+\_\+jobs\+\_\+command}}
 \index{mk\+\_\+jobs\+\_\+command@{mk\+\_\+jobs\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+jobs\+\_\+command()}{mk\_jobs\_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+jobs\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+jobs\+\_\+command()}{mk_jobs_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+jobs\+\_\+command (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -537,7 +537,7 @@ Copy of constructed Jobs\+Command as a {\itshape \hyperlink{unionCommand}{Comman
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+kill\+\_\+command@{mk\+\_\+kill\+\_\+command}}
 \index{mk\+\_\+kill\+\_\+command@{mk\+\_\+kill\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+kill\+\_\+command(char $\ast$sig, char $\ast$job)}{mk\_kill\_command(char *sig, char *job)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+kill\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+kill\+\_\+command(char $\ast$sig, char $\ast$job)}{mk_kill_command(char *sig, char *job)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+kill\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{sig, }
 \item[{char $\ast$}]{job}
@@ -551,7 +551,7 @@ Create a {\itshape \hyperlink{structKillCommand}{Kill\+Command}} structure and r
 \begin{DoxyParams}{Parameters}
 {\em sig} & Signal to send to the job\\
 \hline
-{\em job} & Job id number\\
+{\em job} & \hyperlink{structJob}{Job} id number\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -562,7 +562,7 @@ Copy of constructed \hyperlink{structKillCommand}{Kill\+Command} as a {\itshape 
 \end{DoxySeeAlso}
 \index{command.\+h@{command.\+h}!mk\+\_\+pwd\+\_\+command@{mk\+\_\+pwd\+\_\+command}}
 \index{mk\+\_\+pwd\+\_\+command@{mk\+\_\+pwd\+\_\+command}!command.\+h@{command.\+h}}
-\subsubsection[{\texorpdfstring{mk\+\_\+pwd\+\_\+command()}{mk\_pwd\_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+pwd\+\_\+command (
+\subsubsection[{\texorpdfstring{mk\+\_\+pwd\+\_\+command()}{mk_pwd_command()}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Command} mk\+\_\+pwd\+\_\+command (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}

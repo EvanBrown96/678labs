@@ -52,7 +52,7 @@ Functions for interpreting and running commands.
 \subsection{Function Documentation}
 \index{execute.\+h@{execute.\+h}!get\+\_\+current\+\_\+directory@{get\+\_\+current\+\_\+directory}}
 \index{get\+\_\+current\+\_\+directory@{get\+\_\+current\+\_\+directory}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{get\+\_\+current\+\_\+directory(bool $\ast$should\+\_\+free)}{get\_current\_directory(bool *should\_free)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\+\_\+current\+\_\+directory (
+\subsubsection[{\texorpdfstring{get\+\_\+current\+\_\+directory(bool $\ast$should\+\_\+free)}{get_current_directory(bool *should_free)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\+\_\+current\+\_\+directory (
 \begin{DoxyParamCaption}
 \item[{bool $\ast$}]{should\+\_\+free}
 \end{DoxyParamCaption}
@@ -73,7 +73,7 @@ A string representing the current working directory
 \end{DoxyReturn}
 \index{execute.\+h@{execute.\+h}!lookup\+\_\+env@{lookup\+\_\+env}}
 \index{lookup\+\_\+env@{lookup\+\_\+env}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{lookup\+\_\+env(const char $\ast$env\+\_\+var)}{lookup\_env(const char *env\_var)}}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ lookup\+\_\+env (
+\subsubsection[{\texorpdfstring{lookup\+\_\+env(const char $\ast$env\+\_\+var)}{lookup_env(const char *env_var)}}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ lookup\+\_\+env (
 \begin{DoxyParamCaption}
 \item[{const char $\ast$}]{env\+\_\+var}
 \end{DoxyParamCaption}
@@ -92,7 +92,7 @@ String containing the value of the environment variable env\+\_\+var
 \end{DoxyReturn}
 \index{execute.\+h@{execute.\+h}!print\+\_\+job@{print\+\_\+job}}
 \index{print\+\_\+job@{print\+\_\+job}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{print\+\_\+job(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job (
+\subsubsection[{\texorpdfstring{print\+\_\+job(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -103,11 +103,11 @@ String containing the value of the environment variable env\+\_\+var
 
 Print a job to standard out. 
 
-We use the minimum of what a Job structure should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} structure should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -116,7 +116,7 @@ We use the minimum of what a Job structure should contain to pass to this functi
 \end{DoxyParams}
 \index{execute.\+h@{execute.\+h}!print\+\_\+job\+\_\+bg\+\_\+complete@{print\+\_\+job\+\_\+bg\+\_\+complete}}
 \index{print\+\_\+job\+\_\+bg\+\_\+complete@{print\+\_\+job\+\_\+bg\+\_\+complete}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+complete(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job\_bg\_complete(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+complete (
+\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+complete(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job_bg_complete(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+complete (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -127,11 +127,11 @@ We use the minimum of what a Job structure should contain to pass to this functi
 
 Print the completion of a background job to standard out. 
 
-We use the minimum of what a Job should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -140,7 +140,7 @@ We use the minimum of what a Job should contain to pass to this function.
 \end{DoxyParams}
 \index{execute.\+h@{execute.\+h}!print\+\_\+job\+\_\+bg\+\_\+start@{print\+\_\+job\+\_\+bg\+\_\+start}}
 \index{print\+\_\+job\+\_\+bg\+\_\+start@{print\+\_\+job\+\_\+bg\+\_\+start}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+start(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job\_bg\_start(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+start (
+\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+start(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job_bg_start(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+start (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -151,11 +151,11 @@ We use the minimum of what a Job should contain to pass to this function.
 
 Print the start up of a background job to standard out. 
 
-We use the minimum of what a Job should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -164,7 +164,7 @@ We use the minimum of what a Job should contain to pass to this function.
 \end{DoxyParams}
 \index{execute.\+h@{execute.\+h}!run\+\_\+cd@{run\+\_\+cd}}
 \index{run\+\_\+cd@{run\+\_\+cd}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+cd(\+C\+D\+Command cmd)}{run\_cd(CDCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+cd (
+\subsubsection[{\texorpdfstring{run\+\_\+cd(\+C\+D\+Command cmd)}{run_cd(CDCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+cd (
 \begin{DoxyParamCaption}
 \item[{{\bf C\+D\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -183,7 +183,7 @@ Run the builtin cd (change directory) command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+echo@{run\+\_\+echo}}
 \index{run\+\_\+echo@{run\+\_\+echo}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+echo(\+Echo\+Command cmd)}{run\_echo(EchoCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+echo (
+\subsubsection[{\texorpdfstring{run\+\_\+echo(\+Echo\+Command cmd)}{run_echo(EchoCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+echo (
 \begin{DoxyParamCaption}
 \item[{{\bf Echo\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -202,7 +202,7 @@ Run the builtin echo command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+export@{run\+\_\+export}}
 \index{run\+\_\+export@{run\+\_\+export}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+export(\+Export\+Command cmd)}{run\_export(ExportCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+export (
+\subsubsection[{\texorpdfstring{run\+\_\+export(\+Export\+Command cmd)}{run_export(ExportCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+export (
 \begin{DoxyParamCaption}
 \item[{{\bf Export\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -221,7 +221,7 @@ Run the builtin export command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+generic@{run\+\_\+generic}}
 \index{run\+\_\+generic@{run\+\_\+generic}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+generic(\+Generic\+Command cmd)}{run\_generic(GenericCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+generic (
+\subsubsection[{\texorpdfstring{run\+\_\+generic(\+Generic\+Command cmd)}{run_generic(GenericCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+generic (
 \begin{DoxyParamCaption}
 \item[{{\bf Generic\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -240,7 +240,7 @@ Run a generic (non-\/builtin) command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+jobs@{run\+\_\+jobs}}
 \index{run\+\_\+jobs@{run\+\_\+jobs}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+jobs()}{run\_jobs()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+jobs (
+\subsubsection[{\texorpdfstring{run\+\_\+jobs()}{run_jobs()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+jobs (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -254,7 +254,7 @@ Run the builtin jobs command to show the jobs list.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+kill@{run\+\_\+kill}}
 \index{run\+\_\+kill@{run\+\_\+kill}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+kill(\+Kill\+Command cmd)}{run\_kill(KillCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+kill (
+\subsubsection[{\texorpdfstring{run\+\_\+kill(\+Kill\+Command cmd)}{run_kill(KillCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+kill (
 \begin{DoxyParamCaption}
 \item[{{\bf Kill\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -273,7 +273,7 @@ Run the builtin kill command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+pwd@{run\+\_\+pwd}}
 \index{run\+\_\+pwd@{run\+\_\+pwd}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+pwd()}{run\_pwd()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+pwd (
+\subsubsection[{\texorpdfstring{run\+\_\+pwd()}{run_pwd()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+pwd (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -287,7 +287,7 @@ Run the builtin pwd (print working directory) command.
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!run\+\_\+script@{run\+\_\+script}}
 \index{run\+\_\+script@{run\+\_\+script}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{run\+\_\+script(\+Command\+Holder $\ast$holders)}{run\_script(CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+script (
+\subsubsection[{\texorpdfstring{run\+\_\+script(\+Command\+Holder $\ast$holders)}{run_script(CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+script (
 \begin{DoxyParamCaption}
 \item[{{\bf Command\+Holder} $\ast$}]{holders}
 \end{DoxyParamCaption}
@@ -308,7 +308,7 @@ This function resolves the type of the command and calls the relevant run functi
 \end{DoxySeeAlso}
 \index{execute.\+h@{execute.\+h}!write\+\_\+env@{write\+\_\+env}}
 \index{write\+\_\+env@{write\+\_\+env}!execute.\+h@{execute.\+h}}
-\subsubsection[{\texorpdfstring{write\+\_\+env(const char $\ast$env\+\_\+var, const char $\ast$val)}{write\_env(const char *env\_var, const char *val)}}]{\setlength{\rightskip}{0pt plus 5cm}void write\+\_\+env (
+\subsubsection[{\texorpdfstring{write\+\_\+env(const char $\ast$env\+\_\+var, const char $\ast$val)}{write_env(const char *env_var, const char *val)}}]{\setlength{\rightskip}{0pt plus 5cm}void write\+\_\+env (
 \begin{DoxyParamCaption}
 \item[{const char $\ast$}]{env\+\_\+var, }
 \item[{const char $\ast$}]{val}

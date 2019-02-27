@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Quash Shell: KillCommand Struct Reference</title>
+<title>Quash Shell: Job Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,101 +85,68 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structKillCommand-members.html">List of all members</a>  </div>
+<a href="structJob-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">KillCommand Struct Reference</div>  </div>
+<div class="title">Job Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a> to kill a process based on it's job id.  
- <a href="structKillCommand.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="command_8h_source.html">command.h</a>&gt;</code></p>
+<p>abstraction of a job, or a number of inter-related user commands and the processes associated with them  
+ <a href="structJob.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a9cd678bc0659f74340e3fca28766bcda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="command_8h.html#a21e038f5b8958e203d28bc4f18472352">CommandType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKillCommand.html#a9cd678bc0659f74340e3fca28766bcda">type</a></td></tr>
-<tr class="separator:a9cd678bc0659f74340e3fca28766bcda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20f5367bbec80a936189c57b1f9db351"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKillCommand.html#a20f5367bbec80a936189c57b1f9db351">sig</a></td></tr>
-<tr class="separator:a20f5367bbec80a936189c57b1f9db351"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd4689c605a3dfe202a1779f0d1191ae"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKillCommand.html#abd4689c605a3dfe202a1779f0d1191ae">job</a></td></tr>
-<tr class="separator:abd4689c605a3dfe202a1779f0d1191ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a879a36b90427ec640bef5c92a6c9c24e"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKillCommand.html#a879a36b90427ec640bef5c92a6c9c24e">sig_str</a></td></tr>
-<tr class="separator:a879a36b90427ec640bef5c92a6c9c24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a174a9714a69550b0bbf611e59bfbf332"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKillCommand.html#a174a9714a69550b0bbf611e59bfbf332">job_str</a></td></tr>
-<tr class="separator:a174a9714a69550b0bbf611e59bfbf332"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab154568a2319db1e0cf6296872e6a398"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJob.html#ab154568a2319db1e0cf6296872e6a398">job_id</a></td></tr>
+<tr class="separator:ab154568a2319db1e0cf6296872e6a398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef40af5b52f92ed8019f5db2b5dff77b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJob.html#aef40af5b52f92ed8019f5db2b5dff77b">cmd</a></td></tr>
+<tr class="separator:aef40af5b52f92ed8019f5db2b5dff77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b8bd098708882614988176270f69e10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPIDDeque.html">PIDDeque</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structJob.html#a4b8bd098708882614988176270f69e10">pid_list</a></td></tr>
+<tr class="separator:a4b8bd098708882614988176270f69e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a> to kill a process based on it's job id. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="command_8h.html#aa8311e0de296df9816965be35c31d925" title="All possible types of commands. ">CommandType</a>, <a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a> </dd></dl>
+<div class="textblock"><p>abstraction of a job, or a number of inter-related user commands and the processes associated with them </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="abd4689c605a3dfe202a1779f0d1191ae"></a>
+<a class="anchor" id="aef40af5b52f92ed8019f5db2b5dff77b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int KillCommand::job</td>
+          <td class="memname">char* Job::cmd</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="structJob.html" title="abstraction of a job, or a number of inter-related user commands and the processes associated with th...">Job</a> id number </p>
+<p>command input by the user associated with this job </p>
 
 </div>
 </div>
-<a class="anchor" id="a174a9714a69550b0bbf611e59bfbf332"></a>
+<a class="anchor" id="ab154568a2319db1e0cf6296872e6a398"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* KillCommand::job_str</td>
+          <td class="memname">int Job::job_id</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>String holding the job id number (used for printing) </p>
+<p>id of the job </p>
 
 </div>
 </div>
-<a class="anchor" id="a20f5367bbec80a936189c57b1f9db351"></a>
+<a class="anchor" id="a4b8bd098708882614988176270f69e10"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int KillCommand::sig</td>
+          <td class="memname"><a class="el" href="structPIDDeque.html">PIDDeque</a> Job::pid_list</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Signal to send to the job </p>
-
-</div>
-</div>
-<a class="anchor" id="a879a36b90427ec640bef5c92a6c9c24e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* KillCommand::sig_str</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>String holding the signal number (used for printing) </p>
-
-</div>
-</div>
-<a class="anchor" id="a9cd678bc0659f74340e3fca28766bcda"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="command_8h.html#a21e038f5b8958e203d28bc4f18472352">CommandType</a> KillCommand::type</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Type of command </p>
+<p>list of process ids running under this job </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/<a class="el" href="command_8h_source.html">command.h</a></li>
+<li>src/<a class="el" href="execute_8c.html">execute.c</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

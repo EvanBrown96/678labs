@@ -1,0 +1,36 @@
+\hypertarget{structJob}{}\section{Job Struct Reference}
+\label{structJob}\index{Job@{Job}}
+
+
+abstraction of a job, or a number of inter-\/related user commands and the processes associated with them  
+
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{structJob_ab154568a2319db1e0cf6296872e6a398}{job\+\_\+id}
+\item 
+char $\ast$ \hyperlink{structJob_aef40af5b52f92ed8019f5db2b5dff77b}{cmd}
+\item 
+\hyperlink{structPIDDeque}{P\+I\+D\+Deque} \hyperlink{structJob_a4b8bd098708882614988176270f69e10}{pid\+\_\+list}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+abstraction of a job, or a number of inter-\/related user commands and the processes associated with them 
+
+\subsection{Member Data Documentation}
+\index{Job@{Job}!cmd@{cmd}}
+\index{cmd@{cmd}!Job@{Job}}
+\subsubsection[{\texorpdfstring{cmd}{cmd}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Job\+::cmd}\hypertarget{structJob_aef40af5b52f92ed8019f5db2b5dff77b}{}\label{structJob_aef40af5b52f92ed8019f5db2b5dff77b}
+command input by the user associated with this job \index{Job@{Job}!job\+\_\+id@{job\+\_\+id}}
+\index{job\+\_\+id@{job\+\_\+id}!Job@{Job}}
+\subsubsection[{\texorpdfstring{job\+\_\+id}{job_id}}]{\setlength{\rightskip}{0pt plus 5cm}int Job\+::job\+\_\+id}\hypertarget{structJob_ab154568a2319db1e0cf6296872e6a398}{}\label{structJob_ab154568a2319db1e0cf6296872e6a398}
+id of the job \index{Job@{Job}!pid\+\_\+list@{pid\+\_\+list}}
+\index{pid\+\_\+list@{pid\+\_\+list}!Job@{Job}}
+\subsubsection[{\texorpdfstring{pid\+\_\+list}{pid_list}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+I\+D\+Deque} Job\+::pid\+\_\+list}\hypertarget{structJob_a4b8bd098708882614988176270f69e10}{}\label{structJob_a4b8bd098708882614988176270f69e10}
+list of process ids running under this job 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{execute_8c}{execute.\+c}\end{DoxyCompactItemize}

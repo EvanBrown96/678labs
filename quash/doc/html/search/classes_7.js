@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['simplecommand',['SimpleCommand',['../structSimpleCommand.html',1,'']]]
+  ['quashstate',['QuashState',['../structQuashState.html',1,'']]]
 ];

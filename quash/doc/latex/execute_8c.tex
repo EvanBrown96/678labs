@@ -8,15 +8,152 @@ Implements interface functions between Quash and the environment and functions t
 {\ttfamily \#include \char`\"{}execute.\+h\char`\"{}}\\*
 {\ttfamily \#include $<$stdio.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}quash.\+h\char`\"{}}\\*
-\subsection*{Macros}
+{\ttfamily \#include \char`\"{}deque.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/wait.\+h$>$}\\*
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+\subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-\#define \hyperlink{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+ME}()                                                                                                ~fprintf(stderr, \char`\"{}I\+M\+P\+L\+E\+M\+E\+NT M\+E\+: \%s(line \%d)\+: \%s()\textbackslash{}n\char`\"{}, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+)\hypertarget{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{}\label{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}
+struct \hyperlink{structPIDDeque}{P\+I\+D\+Deque}
+\item 
+struct \hyperlink{structJob}{Job}
+\begin{DoxyCompactList}\small\item\em abstraction of a job, or a number of inter-\/related user commands and the processes associated with them \end{DoxyCompactList}\item 
+struct \hyperlink{structJobDeque}{Job\+Deque}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structPIDDeque}{P\+I\+D\+Deque} {\bfseries P\+I\+D\+Deque}\hypertarget{execute_8c_a3192702629d6425374b0d215699e26e0}{}\label{execute_8c_a3192702629d6425374b0d215699e26e0}
 
-\begin{DoxyCompactList}\small\item\em Note calls to any function that requires implementation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structJob}{Job} \hyperlink{execute_8c_a43f474f2604b8d14220eb351aae2b33e}{Job}\hypertarget{execute_8c_a43f474f2604b8d14220eb351aae2b33e}{}\label{execute_8c_a43f474f2604b8d14220eb351aae2b33e}
+
+\begin{DoxyCompactList}\small\item\em abstraction of a job, or a number of inter-\/related user commands and the processes associated with them \end{DoxyCompactList}\item 
+typedef struct \hyperlink{structJobDeque}{Job\+Deque} {\bfseries Job\+Deque}\hypertarget{execute_8c_a92c8a866db85288f9fc7573975f82fdb}{}\label{execute_8c_a92c8a866db85288f9fc7573975f82fdb}
+
+\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+void {\bfseries apply\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$, void($\ast$)(pid\+\_\+t))\hypertarget{execute_8c_ac9651fada158ce865c9348e2e56ae1d6}{}\label{execute_8c_ac9651fada158ce865c9348e2e56ae1d6}
+
+\item 
+\hyperlink{structPIDDeque}{P\+I\+D\+Deque} {\bfseries new\+\_\+\+P\+I\+D\+Deque} (size\+\_\+t init\+\_\+cap)\hypertarget{execute_8c_a298868154e19ffad2435be06af542341}{}\label{execute_8c_a298868154e19ffad2435be06af542341}
+
+\item 
+\hyperlink{structPIDDeque}{P\+I\+D\+Deque} {\bfseries new\+\_\+destructable\+\_\+\+P\+I\+D\+Deque} (size\+\_\+t init\+\_\+cap, void($\ast$destructor)(pid\+\_\+t))\hypertarget{execute_8c_a04f9ffaecd05001c22a293db979871a7}{}\label{execute_8c_a04f9ffaecd05001c22a293db979871a7}
+
+\item 
+void {\bfseries destroy\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a7833ae133a5bbc67d4c6d5e15fa7f79d}{}\label{execute_8c_a7833ae133a5bbc67d4c6d5e15fa7f79d}
+
+\item 
+void {\bfseries empty\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a70e1c4d2b755087aa70575aea920f526}{}\label{execute_8c_a70e1c4d2b755087aa70575aea920f526}
+
+\item 
+bool {\bfseries is\+\_\+empty\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a53642521b40f6627efc9e133dca524f7}{}\label{execute_8c_a53642521b40f6627efc9e133dca524f7}
+
+\item 
+size\+\_\+t {\bfseries length\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a03409f0d933057d0c8ce117546bc56f0}{}\label{execute_8c_a03409f0d933057d0c8ce117546bc56f0}
+
+\item 
+pid\+\_\+t $\ast$ {\bfseries as\+\_\+array\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, size\+\_\+t $\ast$len)\hypertarget{execute_8c_abe4b3c601e43121bb492b70f71af81d1}{}\label{execute_8c_abe4b3c601e43121bb492b70f71af81d1}
+
+\item 
+void {\bfseries push\+\_\+front\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_a7029dfd00fc2fa095994e4fd7a652040}{}\label{execute_8c_a7029dfd00fc2fa095994e4fd7a652040}
+
+\item 
+void {\bfseries push\+\_\+back\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_adeb0fb56741fe94bf2ba8657610cad9f}{}\label{execute_8c_adeb0fb56741fe94bf2ba8657610cad9f}
+
+\item 
+pid\+\_\+t {\bfseries pop\+\_\+front\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_ab8df3dda96f30d5036df43e5fd496c4f}{}\label{execute_8c_ab8df3dda96f30d5036df43e5fd496c4f}
+
+\item 
+pid\+\_\+t {\bfseries pop\+\_\+back\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a769dfe3436032af4c324f8b32d5a33bc}{}\label{execute_8c_a769dfe3436032af4c324f8b32d5a33bc}
+
+\item 
+pid\+\_\+t {\bfseries peek\+\_\+front\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_adb750328e815dd7917107eb83ede4fda}{}\label{execute_8c_adb750328e815dd7917107eb83ede4fda}
+
+\item 
+pid\+\_\+t {\bfseries peek\+\_\+back\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq)\hypertarget{execute_8c_a5db4bc967305fc6df3fde3c08ece85af}{}\label{execute_8c_a5db4bc967305fc6df3fde3c08ece85af}
+
+\item 
+void {\bfseries update\+\_\+front\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_af67396da59b1efe8e3d1d3208e85059a}{}\label{execute_8c_af67396da59b1efe8e3d1d3208e85059a}
+
+\item 
+void {\bfseries update\+\_\+back\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_ac086e734015e168b5a8ae3e28ca6d34e}{}\label{execute_8c_ac086e734015e168b5a8ae3e28ca6d34e}
+
+\item 
+void {\bfseries update\+\_\+and\+\_\+destroy\+\_\+front\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_a508b8e014491190e2fcf0e5ab1ec32ec}{}\label{execute_8c_a508b8e014491190e2fcf0e5ab1ec32ec}
+
+\item 
+void {\bfseries update\+\_\+and\+\_\+destroy\+\_\+back\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$deq, pid\+\_\+t element)\hypertarget{execute_8c_a3a40f9a75d5fdacddf2dafc4218ae9b2}{}\label{execute_8c_a3a40f9a75d5fdacddf2dafc4218ae9b2}
+
+\item 
+void {\bfseries apply\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$, void($\ast$)(\hyperlink{structJob}{Job}))\hypertarget{execute_8c_a6d9ff356a77e4a5b9cbc497105f73f3a}{}\label{execute_8c_a6d9ff356a77e4a5b9cbc497105f73f3a}
+
+\item 
+\hyperlink{structJobDeque}{Job\+Deque} {\bfseries new\+\_\+\+Job\+Deque} (size\+\_\+t init\+\_\+cap)\hypertarget{execute_8c_a5f9db5e3878323be42abeb7bc0f9cef7}{}\label{execute_8c_a5f9db5e3878323be42abeb7bc0f9cef7}
+
+\item 
+\hyperlink{structJobDeque}{Job\+Deque} {\bfseries new\+\_\+destructable\+\_\+\+Job\+Deque} (size\+\_\+t init\+\_\+cap, void($\ast$destructor)(\hyperlink{structJob}{Job}))\hypertarget{execute_8c_a609f6fa00ddc989e1ea7fbcedbf75844}{}\label{execute_8c_a609f6fa00ddc989e1ea7fbcedbf75844}
+
+\item 
+void {\bfseries destroy\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a9c271db1983ddda0e8341bc87226b40b}{}\label{execute_8c_a9c271db1983ddda0e8341bc87226b40b}
+
+\item 
+void {\bfseries empty\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a78e8eef9707e8908cf1d66aa42c70c88}{}\label{execute_8c_a78e8eef9707e8908cf1d66aa42c70c88}
+
+\item 
+bool {\bfseries is\+\_\+empty\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a2d47cf22e782f25d147f107c0939c3d7}{}\label{execute_8c_a2d47cf22e782f25d147f107c0939c3d7}
+
+\item 
+size\+\_\+t {\bfseries length\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a11235fdb5db2bd6fc54c2cd17c492d55}{}\label{execute_8c_a11235fdb5db2bd6fc54c2cd17c492d55}
+
+\item 
+\hyperlink{structJob}{Job} $\ast$ {\bfseries as\+\_\+array\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, size\+\_\+t $\ast$len)\hypertarget{execute_8c_a2705479385d78940f6a36e58f686e21f}{}\label{execute_8c_a2705479385d78940f6a36e58f686e21f}
+
+\item 
+void {\bfseries push\+\_\+front\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_a0dae020970bfccc31ddb4294a56cb451}{}\label{execute_8c_a0dae020970bfccc31ddb4294a56cb451}
+
+\item 
+void {\bfseries push\+\_\+back\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_a27e15dc8892f8eb069443ac72c53e860}{}\label{execute_8c_a27e15dc8892f8eb069443ac72c53e860}
+
+\item 
+\hyperlink{structJob}{Job} {\bfseries pop\+\_\+front\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a4a67a92af70e40a3e810bc1b40581bd2}{}\label{execute_8c_a4a67a92af70e40a3e810bc1b40581bd2}
+
+\item 
+\hyperlink{structJob}{Job} {\bfseries pop\+\_\+back\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_aad729d22635f4933736436765a77892c}{}\label{execute_8c_aad729d22635f4933736436765a77892c}
+
+\item 
+\hyperlink{structJob}{Job} {\bfseries peek\+\_\+front\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_afe818d94b0efd9c29af8da1781ba6dd9}{}\label{execute_8c_afe818d94b0efd9c29af8da1781ba6dd9}
+
+\item 
+\hyperlink{structJob}{Job} {\bfseries peek\+\_\+back\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq)\hypertarget{execute_8c_a30dedcab02a588a13abcbf63afacb3bd}{}\label{execute_8c_a30dedcab02a588a13abcbf63afacb3bd}
+
+\item 
+void {\bfseries update\+\_\+front\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_ae83f181c91a488da1a67d7878c2c6e38}{}\label{execute_8c_ae83f181c91a488da1a67d7878c2c6e38}
+
+\item 
+void {\bfseries update\+\_\+back\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_a571ee213db71e39c7487178010364b83}{}\label{execute_8c_a571ee213db71e39c7487178010364b83}
+
+\item 
+void {\bfseries update\+\_\+and\+\_\+destroy\+\_\+front\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_ad9f870edea47171dac2034d0d2847aa7}{}\label{execute_8c_ad9f870edea47171dac2034d0d2847aa7}
+
+\item 
+void {\bfseries update\+\_\+and\+\_\+destroy\+\_\+back\+\_\+\+Job\+Deque} (\hyperlink{structJobDeque}{Job\+Deque} $\ast$deq, \hyperlink{structJob}{Job} element)\hypertarget{execute_8c_a968869c2fecc59dbaf3e4b85707c908a}{}\label{execute_8c_a968869c2fecc59dbaf3e4b85707c908a}
+
+\item 
+\hyperlink{structPIDDeque}{P\+I\+D\+Deque} \hyperlink{execute_8c_abbd9e8e3e12e18e5445d1cd018043153}{duplicate\+\_\+\+P\+I\+D\+Deque} (\hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$pid\+\_\+list)
+\begin{DoxyCompactList}\small\item\em creates a duplicate of a \hyperlink{structPIDDeque}{P\+I\+D\+Deque} \end{DoxyCompactList}\item 
+\hyperlink{structJob}{Job} \hyperlink{execute_8c_ac36af032c94012535a82ba2f97ecf7d5}{create\+\_\+job} (int job\+\_\+id, \hyperlink{structPIDDeque}{P\+I\+D\+Deque} $\ast$pids)
+\begin{DoxyCompactList}\small\item\em creates a job with the given pid deque \end{DoxyCompactList}\item 
+void \hyperlink{execute_8c_a721ea14470dcd07b04aa5a2ac3819fa5}{destroy\+\_\+job} (\hyperlink{structJob}{Job} j)
+\begin{DoxyCompactList}\small\item\em frees any memory associated with the passed-\/in job \end{DoxyCompactList}\item 
+int \hyperlink{execute_8c_af6b831edce2ff42e657ec9dcc263c430}{get\+\_\+next\+\_\+job\+\_\+number} ()
+\begin{DoxyCompactList}\small\item\em helper function for returning next available job number for a job \end{DoxyCompactList}\item 
+void \hyperlink{execute_8c_aa87a00c5ff32c27f0b5fbe788a760832}{cleanup\+\_\+globals} ()
+\begin{DoxyCompactList}\small\item\em destroys all globals declared in \hyperlink{execute_8c}{execute.\+c} \end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{execute_8c_acd83b7572960ddecb86a6f96d82fa040}{get\+\_\+current\+\_\+directory} (bool $\ast$should\+\_\+free)
 \begin{DoxyCompactList}\small\item\em Get the real current working directory. \end{DoxyCompactList}\item 
 const char $\ast$ \hyperlink{execute_8c_afeab372587374ba444aa9bdfb6cfa0d8}{lookup\+\_\+env} (const char $\ast$env\+\_\+var)
@@ -52,6 +189,23 @@ void \hyperlink{execute_8c_acffe0d67f5dfe68ccf3765cf8ae29dab}{create\+\_\+proces
 \begin{DoxyCompactList}\small\item\em Creates one new process centered around the {\itshape \hyperlink{unionCommand}{Command}} in the {\itshape \hyperlink{structCommandHolder}{Command\+Holder}} setting up redirects and pipes where needed. \end{DoxyCompactList}\item 
 void \hyperlink{execute_8c_a4dab67459028f3b5a60d1a3695933f4b}{run\+\_\+script} (\hyperlink{structCommandHolder}{Command\+Holder} $\ast$holders)
 \begin{DoxyCompactList}\small\item\em Common entry point for all commands. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structPIDDeque}{P\+I\+D\+Deque} \hyperlink{execute_8c_a79a9470660ed8ec0690b46402c5047ba}{current\+\_\+job}
+\item 
+\hyperlink{structJobDeque}{Job\+Deque} \hyperlink{execute_8c_af9a05a8f3f0fddf825e04edf197f1581}{bg\+\_\+jobs}
+\item 
+int \hyperlink{execute_8c_a281943ca96e4f630234f58ced77a03e8}{pipes} \mbox{[}2\mbox{]}\mbox{[}2\mbox{]}
+\item 
+int \hyperlink{execute_8c_a618cd026a064d6b164288754acd135c7}{cur\+\_\+pipe} = 0
+\item 
+int \hyperlink{execute_8c_aba840807de345477172309cf88dde7dc}{old\+\_\+pipe} = 1
+\item 
+int \hyperlink{execute_8c_a6e27f49150e9a14580fb313cc2777e00}{status}
+\item 
+bool \hyperlink{execute_8c_a12a7ab5ffcb26703821acfc8d6e6cc88}{globals\+\_\+created} = false
+\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -65,7 +219,7 @@ As you add things to this file you may want to change the method signature
 \subsection{Function Documentation}
 \index{execute.\+c@{execute.\+c}!child\+\_\+run\+\_\+command@{child\+\_\+run\+\_\+command}}
 \index{child\+\_\+run\+\_\+command@{child\+\_\+run\+\_\+command}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{child\+\_\+run\+\_\+command(\+Command cmd)}{child\_run\_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void child\+\_\+run\+\_\+command (
+\subsubsection[{\texorpdfstring{child\+\_\+run\+\_\+command(\+Command cmd)}{child_run_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void child\+\_\+run\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{{\bf Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -84,9 +238,44 @@ This version of the function is tailored to commands that should be run in the c
 \begin{DoxySeeAlso}{See also}
 \hyperlink{unionCommand}{Command} 
 \end{DoxySeeAlso}
+\index{execute.\+c@{execute.\+c}!cleanup\+\_\+globals@{cleanup\+\_\+globals}}
+\index{cleanup\+\_\+globals@{cleanup\+\_\+globals}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{cleanup\+\_\+globals()}{cleanup_globals()}}]{\setlength{\rightskip}{0pt plus 5cm}void cleanup\+\_\+globals (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{execute_8c_aa87a00c5ff32c27f0b5fbe788a760832}{}\label{execute_8c_aa87a00c5ff32c27f0b5fbe788a760832}
+
+
+destroys all globals declared in \hyperlink{execute_8c}{execute.\+c} 
+
+should be called upon exit of program \index{execute.\+c@{execute.\+c}!create\+\_\+job@{create\+\_\+job}}
+\index{create\+\_\+job@{create\+\_\+job}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{create\+\_\+job(int job\+\_\+id, P\+I\+D\+Deque $\ast$pids)}{create_job(int job_id, PIDDeque *pids)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Job} create\+\_\+job (
+\begin{DoxyParamCaption}
+\item[{int}]{job\+\_\+id, }
+\item[{{\bf P\+I\+D\+Deque} $\ast$}]{pids}
+\end{DoxyParamCaption}
+)}\hypertarget{execute_8c_ac36af032c94012535a82ba2f97ecf7d5}{}\label{execute_8c_ac36af032c94012535a82ba2f97ecf7d5}
+
+
+creates a job with the given pid deque 
+
+job will be given next available job number after those already in the background deque job will be assigned a command string based on latest command passed in the pids passed in are copied and will N\+OT be affected by their inclusion
+
+
+\begin{DoxyParams}{Parameters}
+{\em job\+\_\+id} & the id number to assign to the job\\
+\hline
+{\em pids} & deque containing the pids running under this job\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the created job 
+\end{DoxyReturn}
 \index{execute.\+c@{execute.\+c}!create\+\_\+process@{create\+\_\+process}}
 \index{create\+\_\+process@{create\+\_\+process}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{create\+\_\+process(\+Command\+Holder holder)}{create\_process(CommandHolder holder)}}]{\setlength{\rightskip}{0pt plus 5cm}void create\+\_\+process (
+\subsubsection[{\texorpdfstring{create\+\_\+process(\+Command\+Holder holder)}{create_process(CommandHolder holder)}}]{\setlength{\rightskip}{0pt plus 5cm}void create\+\_\+process (
 \begin{DoxyParamCaption}
 \item[{{\bf Command\+Holder}}]{holder}
 \end{DoxyParamCaption}
@@ -108,9 +297,46 @@ Not all commands should be run in the child process. A few need to change the qu
 \begin{DoxySeeAlso}{See also}
 \hyperlink{unionCommand}{Command} \hyperlink{structCommandHolder}{Command\+Holder} 
 \end{DoxySeeAlso}
+\index{execute.\+c@{execute.\+c}!destroy\+\_\+job@{destroy\+\_\+job}}
+\index{destroy\+\_\+job@{destroy\+\_\+job}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{destroy\+\_\+job(\+Job j)}{destroy_job(Job j)}}]{\setlength{\rightskip}{0pt plus 5cm}void destroy\+\_\+job (
+\begin{DoxyParamCaption}
+\item[{{\bf Job}}]{j}
+\end{DoxyParamCaption}
+)}\hypertarget{execute_8c_a721ea14470dcd07b04aa5a2ac3819fa5}{}\label{execute_8c_a721ea14470dcd07b04aa5a2ac3819fa5}
+
+
+frees any memory associated with the passed-\/in job 
+
+
+\begin{DoxyParams}{Parameters}
+{\em j} & the job to destroy \\
+\hline
+\end{DoxyParams}
+\index{execute.\+c@{execute.\+c}!duplicate\+\_\+\+P\+I\+D\+Deque@{duplicate\+\_\+\+P\+I\+D\+Deque}}
+\index{duplicate\+\_\+\+P\+I\+D\+Deque@{duplicate\+\_\+\+P\+I\+D\+Deque}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{duplicate\+\_\+\+P\+I\+D\+Deque(\+P\+I\+D\+Deque $\ast$pid\+\_\+list)}{duplicate_PIDDeque(PIDDeque *pid_list)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+I\+D\+Deque} duplicate\+\_\+\+P\+I\+D\+Deque (
+\begin{DoxyParamCaption}
+\item[{{\bf P\+I\+D\+Deque} $\ast$}]{pid\+\_\+list}
+\end{DoxyParamCaption}
+)}\hypertarget{execute_8c_abbd9e8e3e12e18e5445d1cd018043153}{}\label{execute_8c_abbd9e8e3e12e18e5445d1cd018043153}
+
+
+creates a duplicate of a \hyperlink{structPIDDeque}{P\+I\+D\+Deque} 
+
+the original passed-\/in \hyperlink{structPIDDeque}{P\+I\+D\+Deque} is not modified
+
+
+\begin{DoxyParams}{Parameters}
+{\em pid\+\_\+list} & the \hyperlink{structPIDDeque}{P\+I\+D\+Deque} to create a duplicate of\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new \hyperlink{structPIDDeque}{P\+I\+D\+Deque} which is a duplicate of pid\+\_\+list 
+\end{DoxyReturn}
 \index{execute.\+c@{execute.\+c}!get\+\_\+current\+\_\+directory@{get\+\_\+current\+\_\+directory}}
 \index{get\+\_\+current\+\_\+directory@{get\+\_\+current\+\_\+directory}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{get\+\_\+current\+\_\+directory(bool $\ast$should\+\_\+free)}{get\_current\_directory(bool *should\_free)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\+\_\+current\+\_\+directory (
+\subsubsection[{\texorpdfstring{get\+\_\+current\+\_\+directory(bool $\ast$should\+\_\+free)}{get_current_directory(bool *should_free)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ get\+\_\+current\+\_\+directory (
 \begin{DoxyParamCaption}
 \item[{bool $\ast$}]{should\+\_\+free}
 \end{DoxyParamCaption}
@@ -129,9 +355,23 @@ This is not necessarily the same as the P\+WD environment variable and setting P
 \begin{DoxyReturn}{Returns}
 A string representing the current working directory 
 \end{DoxyReturn}
+\index{execute.\+c@{execute.\+c}!get\+\_\+next\+\_\+job\+\_\+number@{get\+\_\+next\+\_\+job\+\_\+number}}
+\index{get\+\_\+next\+\_\+job\+\_\+number@{get\+\_\+next\+\_\+job\+\_\+number}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{get\+\_\+next\+\_\+job\+\_\+number()}{get_next_job_number()}}]{\setlength{\rightskip}{0pt plus 5cm}int get\+\_\+next\+\_\+job\+\_\+number (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{execute_8c_af6b831edce2ff42e657ec9dcc263c430}{}\label{execute_8c_af6b831edce2ff42e657ec9dcc263c430}
+
+
+helper function for returning next available job number for a job 
+
+\begin{DoxyReturn}{Returns}
+the next available background job number 
+\end{DoxyReturn}
 \index{execute.\+c@{execute.\+c}!lookup\+\_\+env@{lookup\+\_\+env}}
 \index{lookup\+\_\+env@{lookup\+\_\+env}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{lookup\+\_\+env(const char $\ast$env\+\_\+var)}{lookup\_env(const char *env\_var)}}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ lookup\+\_\+env (
+\subsubsection[{\texorpdfstring{lookup\+\_\+env(const char $\ast$env\+\_\+var)}{lookup_env(const char *env_var)}}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ lookup\+\_\+env (
 \begin{DoxyParamCaption}
 \item[{const char $\ast$}]{env\+\_\+var}
 \end{DoxyParamCaption}
@@ -150,7 +390,7 @@ String containing the value of the environment variable env\+\_\+var
 \end{DoxyReturn}
 \index{execute.\+c@{execute.\+c}!parent\+\_\+run\+\_\+command@{parent\+\_\+run\+\_\+command}}
 \index{parent\+\_\+run\+\_\+command@{parent\+\_\+run\+\_\+command}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{parent\+\_\+run\+\_\+command(\+Command cmd)}{parent\_run\_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void parent\+\_\+run\+\_\+command (
+\subsubsection[{\texorpdfstring{parent\+\_\+run\+\_\+command(\+Command cmd)}{parent_run_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void parent\+\_\+run\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{{\bf Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -171,7 +411,7 @@ This version of the function is tailored to commands that should be run in the p
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!print\+\_\+job@{print\+\_\+job}}
 \index{print\+\_\+job@{print\+\_\+job}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{print\+\_\+job(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job (
+\subsubsection[{\texorpdfstring{print\+\_\+job(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -182,11 +422,11 @@ This version of the function is tailored to commands that should be run in the p
 
 Print a job to standard out. 
 
-We use the minimum of what a Job structure should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} structure should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -195,7 +435,7 @@ We use the minimum of what a Job structure should contain to pass to this functi
 \end{DoxyParams}
 \index{execute.\+c@{execute.\+c}!print\+\_\+job\+\_\+bg\+\_\+complete@{print\+\_\+job\+\_\+bg\+\_\+complete}}
 \index{print\+\_\+job\+\_\+bg\+\_\+complete@{print\+\_\+job\+\_\+bg\+\_\+complete}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+complete(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job\_bg\_complete(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+complete (
+\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+complete(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job_bg_complete(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+complete (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -206,11 +446,11 @@ We use the minimum of what a Job structure should contain to pass to this functi
 
 Print the completion of a background job to standard out. 
 
-We use the minimum of what a Job should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -219,7 +459,7 @@ We use the minimum of what a Job should contain to pass to this function.
 \end{DoxyParams}
 \index{execute.\+c@{execute.\+c}!print\+\_\+job\+\_\+bg\+\_\+start@{print\+\_\+job\+\_\+bg\+\_\+start}}
 \index{print\+\_\+job\+\_\+bg\+\_\+start@{print\+\_\+job\+\_\+bg\+\_\+start}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+start(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print\_job\_bg\_start(int job\_id, pid\_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+start (
+\subsubsection[{\texorpdfstring{print\+\_\+job\+\_\+bg\+\_\+start(int job\+\_\+id, pid\+\_\+t pid, const char $\ast$cmd)}{print_job_bg_start(int job_id, pid_t pid, const char *cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+\_\+job\+\_\+bg\+\_\+start (
 \begin{DoxyParamCaption}
 \item[{int}]{job\+\_\+id, }
 \item[{pid\+\_\+t}]{pid, }
@@ -230,11 +470,11 @@ We use the minimum of what a Job should contain to pass to this function.
 
 Print the start up of a background job to standard out. 
 
-We use the minimum of what a Job should contain to pass to this function.
+We use the minimum of what a \hyperlink{structJob}{Job} should contain to pass to this function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em job\+\_\+id} & Job identifier number.\\
+{\em job\+\_\+id} & \hyperlink{structJob}{Job} identifier number.\\
 \hline
 {\em pid} & Process id of a process belonging to this job.\\
 \hline
@@ -243,7 +483,7 @@ We use the minimum of what a Job should contain to pass to this function.
 \end{DoxyParams}
 \index{execute.\+c@{execute.\+c}!run\+\_\+cd@{run\+\_\+cd}}
 \index{run\+\_\+cd@{run\+\_\+cd}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+cd(\+C\+D\+Command cmd)}{run\_cd(CDCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+cd (
+\subsubsection[{\texorpdfstring{run\+\_\+cd(\+C\+D\+Command cmd)}{run_cd(CDCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+cd (
 \begin{DoxyParamCaption}
 \item[{{\bf C\+D\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -262,7 +502,7 @@ Run the builtin cd (change directory) command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+echo@{run\+\_\+echo}}
 \index{run\+\_\+echo@{run\+\_\+echo}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+echo(\+Echo\+Command cmd)}{run\_echo(EchoCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+echo (
+\subsubsection[{\texorpdfstring{run\+\_\+echo(\+Echo\+Command cmd)}{run_echo(EchoCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+echo (
 \begin{DoxyParamCaption}
 \item[{{\bf Echo\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -281,7 +521,7 @@ Run the builtin echo command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+export@{run\+\_\+export}}
 \index{run\+\_\+export@{run\+\_\+export}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+export(\+Export\+Command cmd)}{run\_export(ExportCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+export (
+\subsubsection[{\texorpdfstring{run\+\_\+export(\+Export\+Command cmd)}{run_export(ExportCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+export (
 \begin{DoxyParamCaption}
 \item[{{\bf Export\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -300,7 +540,7 @@ Run the builtin export command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+generic@{run\+\_\+generic}}
 \index{run\+\_\+generic@{run\+\_\+generic}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+generic(\+Generic\+Command cmd)}{run\_generic(GenericCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+generic (
+\subsubsection[{\texorpdfstring{run\+\_\+generic(\+Generic\+Command cmd)}{run_generic(GenericCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+generic (
 \begin{DoxyParamCaption}
 \item[{{\bf Generic\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -319,7 +559,7 @@ Run a generic (non-\/builtin) command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+jobs@{run\+\_\+jobs}}
 \index{run\+\_\+jobs@{run\+\_\+jobs}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+jobs()}{run\_jobs()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+jobs (
+\subsubsection[{\texorpdfstring{run\+\_\+jobs()}{run_jobs()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+jobs (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -333,7 +573,7 @@ Run the builtin jobs command to show the jobs list.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+kill@{run\+\_\+kill}}
 \index{run\+\_\+kill@{run\+\_\+kill}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+kill(\+Kill\+Command cmd)}{run\_kill(KillCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+kill (
+\subsubsection[{\texorpdfstring{run\+\_\+kill(\+Kill\+Command cmd)}{run_kill(KillCommand cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+kill (
 \begin{DoxyParamCaption}
 \item[{{\bf Kill\+Command}}]{cmd}
 \end{DoxyParamCaption}
@@ -352,7 +592,7 @@ Run the builtin kill command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+pwd@{run\+\_\+pwd}}
 \index{run\+\_\+pwd@{run\+\_\+pwd}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+pwd()}{run\_pwd()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+pwd (
+\subsubsection[{\texorpdfstring{run\+\_\+pwd()}{run_pwd()}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+pwd (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -366,7 +606,7 @@ Run the builtin pwd (print working directory) command.
 \end{DoxySeeAlso}
 \index{execute.\+c@{execute.\+c}!run\+\_\+script@{run\+\_\+script}}
 \index{run\+\_\+script@{run\+\_\+script}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{run\+\_\+script(\+Command\+Holder $\ast$holders)}{run\_script(CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+script (
+\subsubsection[{\texorpdfstring{run\+\_\+script(\+Command\+Holder $\ast$holders)}{run_script(CommandHolder *holders)}}]{\setlength{\rightskip}{0pt plus 5cm}void run\+\_\+script (
 \begin{DoxyParamCaption}
 \item[{{\bf Command\+Holder} $\ast$}]{holders}
 \end{DoxyParamCaption}
@@ -385,3 +625,28 @@ This function resolves the type of the command and calls the relevant run functi
 \begin{DoxySeeAlso}{See also}
 \hyperlink{unionCommand}{Command} 
 \end{DoxySeeAlso}
+
+
+\subsection{Variable Documentation}
+\index{execute.\+c@{execute.\+c}!bg\+\_\+jobs@{bg\+\_\+jobs}}
+\index{bg\+\_\+jobs@{bg\+\_\+jobs}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{bg\+\_\+jobs}{bg_jobs}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Job\+Deque} bg\+\_\+jobs}\hypertarget{execute_8c_af9a05a8f3f0fddf825e04edf197f1581}{}\label{execute_8c_af9a05a8f3f0fddf825e04edf197f1581}
+contains all of the jobs executing in the background \index{execute.\+c@{execute.\+c}!cur\+\_\+pipe@{cur\+\_\+pipe}}
+\index{cur\+\_\+pipe@{cur\+\_\+pipe}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{cur\+\_\+pipe}{cur_pipe}}]{\setlength{\rightskip}{0pt plus 5cm}int cur\+\_\+pipe = 0}\hypertarget{execute_8c_a618cd026a064d6b164288754acd135c7}{}\label{execute_8c_a618cd026a064d6b164288754acd135c7}
+id of the next pipe to be used -\/ pipes are alternated \index{execute.\+c@{execute.\+c}!current\+\_\+job@{current\+\_\+job}}
+\index{current\+\_\+job@{current\+\_\+job}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{current\+\_\+job}{current_job}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+I\+D\+Deque} current\+\_\+job}\hypertarget{execute_8c_a79a9470660ed8ec0690b46402c5047ba}{}\label{execute_8c_a79a9470660ed8ec0690b46402c5047ba}
+contains a list of pids associated with the job running in the foreground \index{execute.\+c@{execute.\+c}!globals\+\_\+created@{globals\+\_\+created}}
+\index{globals\+\_\+created@{globals\+\_\+created}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{globals\+\_\+created}{globals_created}}]{\setlength{\rightskip}{0pt plus 5cm}bool globals\+\_\+created = false}\hypertarget{execute_8c_a12a7ab5ffcb26703821acfc8d6e6cc88}{}\label{execute_8c_a12a7ab5ffcb26703821acfc8d6e6cc88}
+flag if global variables have been initialized in run\+\_\+script yet \index{execute.\+c@{execute.\+c}!old\+\_\+pipe@{old\+\_\+pipe}}
+\index{old\+\_\+pipe@{old\+\_\+pipe}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{old\+\_\+pipe}{old_pipe}}]{\setlength{\rightskip}{0pt plus 5cm}int old\+\_\+pipe = 1}\hypertarget{execute_8c_aba840807de345477172309cf88dde7dc}{}\label{execute_8c_aba840807de345477172309cf88dde7dc}
+id of the pipe that was last used (always = cur\+\_\+pipe+1\%2) \index{execute.\+c@{execute.\+c}!pipes@{pipes}}
+\index{pipes@{pipes}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{pipes}{pipes}}]{\setlength{\rightskip}{0pt plus 5cm}int pipes\mbox{[}2\mbox{]}\mbox{[}2\mbox{]}}\hypertarget{execute_8c_a281943ca96e4f630234f58ced77a03e8}{}\label{execute_8c_a281943ca96e4f630234f58ced77a03e8}
+used for piping input and output between processes \index{execute.\+c@{execute.\+c}!status@{status}}
+\index{status@{status}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{status}{status}}]{\setlength{\rightskip}{0pt plus 5cm}int status}\hypertarget{execute_8c_a6e27f49150e9a14580fb313cc2777e00}{}\label{execute_8c_a6e27f49150e9a14580fb313cc2777e00}
+used for passing into waitpid and storing returned status 
