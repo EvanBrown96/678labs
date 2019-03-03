@@ -8,6 +8,12 @@ int ctrl_c_count = 0;
 int got_response = 0;
 #define CTRL_C_THRESHOLD  5
 
+// alarm signal handler
+void catch_alrm(int sig_num){
+  printf("\nUser taking too long to respond. Exiting...\n");
+  exit(0);
+}
+
 /* the Ctrl-C signal handler */
 void catch_int(int sig_num)
 {
@@ -20,8 +26,14 @@ void catch_int(int sig_num)
      * exit or not */
     printf("\nReally exit? [Y/n]: ");
     fflush(stdout);
+
+    // start alarm
+    alarm(10);
+
     fgets(answer, sizeof(answer), stdin);
     if (answer[0] == 'n' || answer[0] == 'N') {
+      // cancel the outstanding alarm
+      alarm(0);
       printf("\nContinuing\n");
       fflush(stdout);
       /*
@@ -52,22 +64,26 @@ int main(int argc, char* argv[])
 
   /* setup mask_set */
   sigfillset(&mask_set);
-
-  sigdelset(&mask_set, SIGALRM);
+  sa.sa_mask = mask_set;
 
   /* set signal handlers */
 
-  // setup handler for ctrl-C
-  sa.sa_handler = catch_int;
-  // do this? sa.sa_mask =
-  sigaction(SIGINT, &sa, NULL)
-
   // setup handler for ctrl-Z
+  sa.sa_handler = catch_tstp;
+  sigaction(SIGTSTP, &sa, NULL);
 
   // setup handler for alarm SIGALRM
+  sa.sa_handler = catch_alrm;
+  sigaction(SIGALRM, &sa, NULL);
+
+  // setup handler for ctrl-C
+  // remove SIGALRM from mask, since the alarm may go off inside the signal handler
+  sigdelset(&sa.sa_mask, SIGALRM);
+  sa.sa_handler = catch_int;
+  sigaction(SIGINT, &sa, NULL);
 
   // pause loop
-  while(true){
+  while(1){
     pause();
   }
 
