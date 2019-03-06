@@ -1,0 +1,5 @@
+run 'make test' on cycle1, everything else can run locally
+
+./pcount 10000 1
+10000 = loop times
+1 = increment
