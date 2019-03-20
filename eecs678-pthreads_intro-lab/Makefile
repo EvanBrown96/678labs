@@ -1,6 +1,6 @@
 # Defined constants for command base name and arguments for simple test
 #
-STUDENT_ID=XXXXXXX
+STUDENT_ID=2824018
 
 SRCDIR = ./
 CFILELIST = ptcount_mutex.c ptcount_atomic.c
@@ -39,8 +39,7 @@ zip:
 	mkdir $(STUDENT_ID)-pthreads_intro-lab
 #	get all the c files to be .txt for archiving
 	$(foreach file, $(RAWC), cp $(file).c $(file)-c.txt;)
-	mv *-c.txt $(STUDENT_ID)-pthreads_intro-lab/	
+	mv *-c.txt $(STUDENT_ID)-pthreads_intro-lab/
 	cp $(CFILELIST) Makefile $(STUDENT_ID)-pthreads_intro-lab/
 	zip -r $(STUDENT_ID)-pthreads_intro-lab.zip $(STUDENT_ID)-pthreads_intro-lab
 	rm -rf $(STUDENT_ID)-pthreads_intro-lab
-
