@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define A 6
 #define B 3
@@ -19,10 +20,24 @@ int main (void)
 
 	printf("Operand 'a' : %d | Operand 'b' : %d\n", A, B);
 	printf("Specify the operation to perform (0 : add | 1 : subtract | 2 : Multiply | 3 : divide): ");
+	fflush(stdout);
 
-	int result = func_array[0](A, B);
+	// get user input
+	char c_choice[2];
+	c_choice[1] = '\0';
+	read(STDIN_FILENO, &c_choice, 1);
 
-	printf("\nx = %d\n", result);
+	// convert to int and check choice bounds
+	int choice = atoi(c_choice);
+	if(choice < 0 || choice > 3){
+		printf("Invalid choice, exiting\n");
+		return -1;
+	}
+
+	// compute result by applying one of the functions
+	int result = func_array[choice](A, B);
+
+	printf("x = %d\n", result);
 
 	return 0;
 }
