@@ -152,8 +152,9 @@ static void *dp_thread(void *arg)
     /*
      * Grab both chopsticks: ASYMMETRIC and WAITER SOLUTION
      */
-    pthread_mutex_lock(left_chop(me));
+    if(id%2 == 0) pthread_mutex_lock(left_chop(me));
     pthread_mutex_lock(right_chop(me));
+    if(id%2 == 1) pthread_mutex_lock(left_chop(me));
 
     /*
      * Eat some random amount of food. Again, this involves a
