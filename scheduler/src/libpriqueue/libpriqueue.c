@@ -31,9 +31,9 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 
 void priqueue_resize(priqueue_t *q)
 {
-  void** old_data = data;
+  void** old_data = q->data;
   data = malloc(sizeof(void*)*(q->size*2+1));
-  for(int i = 0; i < q->count){
+  for(int i = 0; i < q->count; i++){
     data[i] = old_data[(i+q->start)%q->size];
   }
   free(old_data);
@@ -58,15 +58,11 @@ void priqueue_swap(priqueue_t *q, int index1, int index2)
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
   if(q->count == q->size) priqueue_resize(q);
-  //
-  // int index = q->count;
-  // int parent = priqueue_compute_parent(index);
-  // q->data[index] = ptr;
-  // while(q->comparer(ptr, q->data[parent]) < 0){
-  //   priqueue_swap(q, index, parent);
-  //   if(parent == 0) break;
-  //   index = parent;
-  // }
+
+  q->data[(q->start+q->count)%q->size] = ptr;
+
+  q->count++;
+  return q->count-1;
 
 }
 
@@ -100,8 +96,8 @@ void *priqueue_poll(priqueue_t *q)
 	if(priqueue_size(q) == 0) return NULL;
 
   void* ret = q->data[q->start];
-  start++;
-  count--;
+  q->start++;
+  q->count--;
   return ret;
 }
 
