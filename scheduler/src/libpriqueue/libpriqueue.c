@@ -138,7 +138,7 @@ int priqueue_remove(priqueue_t *q, void *ptr)
   int removed = 0;
 
   for(int i = 0; i < q->count; i++){
-    if(ptr == q->data[i]){
+    if(ptr == q->data[priqueue_get_true_index(q, i)]){
       priqueue_remove_at(q, i);
       i--;
       removed++;
@@ -167,7 +167,7 @@ void *priqueue_remove_at(priqueue_t *q, int index)
   }
   q->count--;
   // removed item will now be in the last spot after good data
-  return q->data[count];
+  return q->data[priqueue_get_true_index(q, q->count)];
 }
 
 
