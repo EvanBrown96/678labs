@@ -4,11 +4,25 @@
 #ifndef LIBPRIQUEUE_H_
 #define LIBPRIQUEUE_H_
 
+// node of priority queue (minheap)
+typedef struct _pqnode_t
+{
+
+  void* data;
+  pqnode_t* left;
+  pqnode_t* right;
+
+} pqnode_t;
+
 /**
   Priqueue Data Structure
 */
 typedef struct _priqueue_t
 {
+
+  pqnode_t* root;
+  int size;
+  int(*comparer)(const void *, const void *);
 
 } priqueue_t;
 
