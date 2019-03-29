@@ -34,7 +34,7 @@ void priqueue_resize(priqueue_t *q)
   void** old_data = q->data;
   q->data = malloc(sizeof(void*)*(q->size*2+1));
   for(int i = 0; i < q->count; i++){
-    data[i] = old_data[(i+q->start)%q->size];
+    q->data[i] = old_data[(i+q->start)%q->size];
   }
   free(old_data);
   q->size = q->size*2+1;
