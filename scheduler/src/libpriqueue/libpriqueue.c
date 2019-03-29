@@ -6,6 +6,7 @@
 
 #include "libpriqueue.h"
 
+#define INITIAL_SIZE 10
 
 /**
   Initializes the priqueue_t data structure.
@@ -19,7 +20,7 @@
  */
 void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 {
-  q->root = NULL;
+  q->data = malloc(sizeof(void*)*INITIAL_SIZE);
   q->size = 0;
   q->comparer = comparer;
 }
@@ -34,7 +35,9 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
-	return -1;
+	// pqnode_t* newnode = malloc(sizeof(newnode));
+  // newnode->data = ptr;
+  // newnode->
 }
 
 
