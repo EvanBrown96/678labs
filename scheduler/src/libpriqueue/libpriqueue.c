@@ -64,10 +64,22 @@ int priqueue_offer(priqueue_t *q, void *ptr)
 {
   if(q->count == q->size) priqueue_resize(q);
 
+  // find index where data should be inserted
+  int index = 0;
+  while(index < q->count && q->comparer(ptr, q->data[priqueue_get_true_index(q, index)]) > 0){
+    index++;
+  }
+
+  // put new datum at very end of good data
   q->data[priqueue_get_true_index(q, q->count)] = ptr;
 
+  // move new data to desired index
+  for(int i = q->count; i>index; i++){
+    priqueue_swap(q, priqueue_get_true_index(q, i), priqueue_get_true_index(q, i-1));
+  }
+
   q->count++;
-  return q->count-1;
+  return index;
 
 }
 
