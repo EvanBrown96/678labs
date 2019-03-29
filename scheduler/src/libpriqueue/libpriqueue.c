@@ -29,12 +29,17 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
   q->comparer = comparer;
 }
 
+int priqueue_get_true_index(priqueue_t *q, int index)
+{
+  return (index+q->start)%q->size;
+}
+
 void priqueue_resize(priqueue_t *q)
 {
   void** old_data = q->data;
   q->data = malloc(sizeof(void*)*(q->size*2+1));
   for(int i = 0; i < q->count; i++){
-    q->data[i] = old_data[(i+q->start)%q->size];
+    q->data[i] = old_data[priqueue_get_true_index(q, i)];
   }
   free(old_data);
   q->size = q->size*2+1;
@@ -59,7 +64,7 @@ int priqueue_offer(priqueue_t *q, void *ptr)
 {
   if(q->count == q->size) priqueue_resize(q);
 
-  q->data[(q->start+q->count)%q->size] = ptr;
+  q->data[priqueue_get_true_index(q, q->count)] = ptr;
 
   q->count++;
   return q->count-1;
@@ -79,7 +84,7 @@ void *priqueue_peek(priqueue_t *q)
 {
   if(priqueue_size(q) == 0) return NULL;
 
-  return q->data[q->start];
+  return q->data[priqueue_get_true_index(q, 0)];
 }
 
 
@@ -95,7 +100,7 @@ void *priqueue_poll(priqueue_t *q)
 {
 	if(priqueue_size(q) == 0) return NULL;
 
-  void* ret = q->data[q->start];
+  void* ret = q->data[priqueue_get_true_index(q, 0)];
   q->start++;
   q->count--;
   return ret;
@@ -115,7 +120,7 @@ void *priqueue_at(priqueue_t *q, int index)
 {
 	if(index >= q->count) return NULL;
 
-  return q->data[(q->start+q->count)%q->size];
+  return q->data[priqueue_get_true_index(q, index)];
 }
 
 
@@ -130,7 +135,17 @@ void *priqueue_at(priqueue_t *q, int index)
  */
 int priqueue_remove(priqueue_t *q, void *ptr)
 {
-	return 0;
+  int removed = 0;
+
+  for(int i = 0; i < q->count; i++){
+    if(ptr == q->data[i]){
+      priqueue_remove_at(q, i);
+      i--;
+      removed++;
+    }
+  }
+
+  return removed;
 }
 
 
@@ -145,7 +160,14 @@ int priqueue_remove(priqueue_t *q, void *ptr)
  */
 void *priqueue_remove_at(priqueue_t *q, int index)
 {
-	return 0;
+  if(index < 0 || index >= q->count) return NULL;
+
+	for(int i = index; i < q->count-1; i++){
+    priqueue_swap(q, priqueue_get_true_index(q, index), priqueue_get_true_index(q, index+1));
+  }
+  q->count--;
+  // removed item will now be in the last spot after good data
+  return q->data[count];
 }
 
 
