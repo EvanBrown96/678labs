@@ -7,6 +7,8 @@
 #include "libpriqueue.h"
 
 #define INITIAL_SIZE 10
+#define FALSE 0
+#define TRUE 1
 
 /**
   Initializes the priqueue_t data structure.
@@ -21,10 +23,30 @@
 void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 {
   q->data = malloc(sizeof(void*)*INITIAL_SIZE);
-  q->size = 0;
+  q->count = 0;
+  q->size = INITIAL_SIZE;
+  q->start = 0;
   q->comparer = comparer;
 }
 
+void priqueue_resize(priqueue_t *q)
+{
+  void** old_data = data;
+  data = malloc(sizeof(void*)*(q->size*2+1));
+  for(int i = 0; i < q->count){
+    data[i] = old_data[(i+q->start)%q->size];
+  }
+  free(old_data);
+  q->size = q->size*2+1;
+  q->start = 0;
+}
+
+void priqueue_swap(priqueue_t *q, int index1, int index2)
+{
+  void* save = q->data[index1];
+  q->data[index1] = q->data[index2];
+  q->data[index2] = save;
+}
 
 /**
   Inserts the specified element into this priority queue.
@@ -35,9 +57,17 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
-	// pqnode_t* newnode = malloc(sizeof(newnode));
-  // newnode->data = ptr;
-  // newnode->
+  if(q->count == q->size) priqueue_resize(q);
+  //
+  // int index = q->count;
+  // int parent = priqueue_compute_parent(index);
+  // q->data[index] = ptr;
+  // while(q->comparer(ptr, q->data[parent]) < 0){
+  //   priqueue_swap(q, index, parent);
+  //   if(parent == 0) break;
+  //   index = parent;
+  // }
+
 }
 
 
@@ -51,7 +81,9 @@ int priqueue_offer(priqueue_t *q, void *ptr)
  */
 void *priqueue_peek(priqueue_t *q)
 {
-	return NULL;
+  if(priqueue_size(q) == 0) return NULL;
+
+  return q->data[q->start];
 }
 
 
@@ -65,7 +97,12 @@ void *priqueue_peek(priqueue_t *q)
  */
 void *priqueue_poll(priqueue_t *q)
 {
-	return NULL;
+	if(priqueue_size(q) == 0) return NULL;
+
+  void* ret = q->data[q->start];
+  start++;
+  count--;
+  return ret;
 }
 
 
@@ -80,7 +117,9 @@ void *priqueue_poll(priqueue_t *q)
  */
 void *priqueue_at(priqueue_t *q, int index)
 {
-	return NULL;
+	if(index >= q->count) return NULL;
+
+  return q->data[(q->start+q->count)%q->size];
 }
 
 
@@ -122,7 +161,7 @@ void *priqueue_remove_at(priqueue_t *q, int index)
  */
 int priqueue_size(priqueue_t *q)
 {
-	return 0;
+	return q->count;
 }
 
 
@@ -133,5 +172,5 @@ int priqueue_size(priqueue_t *q)
  */
 void priqueue_destroy(priqueue_t *q)
 {
-
+  free(q->data);
 }
