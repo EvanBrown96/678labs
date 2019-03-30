@@ -38,6 +38,7 @@ void * priqueue_at       (priqueue_t *q, int index);
 int    priqueue_remove   (priqueue_t *q, void *ptr);
 void * priqueue_remove_at(priqueue_t *q, int index);
 int    priqueue_size     (priqueue_t *q);
+int    priqueue_is_empty (priqueue_t *q);
 
 void   priqueue_destroy  (priqueue_t *q);
 

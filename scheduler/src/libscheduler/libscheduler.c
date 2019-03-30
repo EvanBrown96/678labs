@@ -33,6 +33,7 @@ scheme_t g_scheme;
 priqueue_t g_job_queue;
 priqueue_t g_idle_cores;
 int g_cores;
+job_t* g_running_jobs;
 
 /**
   comparison functions, for priority queues
@@ -70,6 +71,7 @@ void scheduler_start_up(int cores, scheme_t scheme)
   g_scheme = scheme;
   priqueue_init(&g_idle_cores, core_compare)
   priqueue_init(&g_job_queue, job_compare);
+  running_jobs = malloc(cores * sizeof(job_t));
 }
 
 
@@ -95,7 +97,9 @@ void scheduler_start_up(int cores, scheme_t scheme)
  */
 int scheduler_new_job(int job_number, int time, int running_time, int priority)
 {
-	return -1;
+	// if(!priqueue_is_empty(&g_idle_cores)){
+  //   job_t
+  // }
 }
 
 
@@ -185,7 +189,9 @@ float scheduler_average_response_time()
 */
 void scheduler_clean_up()
 {
-
+  priqueue_destroy(&g_idle_cores);
+  priqueue_destroy(&g_job_queue);
+  free(running_jobs);
 }
 
 

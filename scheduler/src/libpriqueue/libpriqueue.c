@@ -194,6 +194,16 @@ int priqueue_size(priqueue_t *q)
 	return q->count;
 }
 
+/**
+  Returns 1 if the priority queue is empty, else 0
+
+  @param q a pointer to an instance of the priqueue_t data structure
+  @return if the queue is empty
+ */
+int priqueue_is_empty(priqueue_t *q)
+{
+  return (q->count == 0);
+}
 
 /**
   Destroys and frees all the memory associated with q.
