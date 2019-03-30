@@ -39,11 +39,11 @@ job_t* g_running_jobs;
   comparison functions, for priority queues
 */
 
-int core_compare(void* core1, void* core2){
+int core_compare(const void* core1, const void* core2){
   return *((int*) core1) - *((int*) core2);
 }
 
-int job_compare(void* j1, void* j2){
+int job_compare(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
 
@@ -69,9 +69,9 @@ void scheduler_start_up(int cores, scheme_t scheme)
 {
   g_cores = cores;
   g_scheme = scheme;
-  priqueue_init(&g_idle_cores, core_compare)
+  priqueue_init(&g_idle_cores, core_compare);
   priqueue_init(&g_job_queue, job_compare);
-  running_jobs = malloc(cores * sizeof(job_t));
+  g_running_jobs = malloc(cores * sizeof(job_t));
 }
 
 
@@ -100,6 +100,8 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
 	// if(!priqueue_is_empty(&g_idle_cores)){
   //   job_t
   // }
+
+  return -1;
 }
 
 
@@ -191,7 +193,7 @@ void scheduler_clean_up()
 {
   priqueue_destroy(&g_idle_cores);
   priqueue_destroy(&g_job_queue);
-  free(running_jobs);
+  free(g_running_jobs);
 }
 
 
