@@ -203,7 +203,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
       // go through each core until we find a job to preempt or run out of cores
       for(int i = 0; i < g_total_cores; i++){
         // test if we should do preemption
-        if(g_job_queue->comparer(this_job, g_running_jobs[i]) < 0){
+        if(g_job_queue.comparer(this_job, g_running_jobs[i]) < 0){
           // unschedule job currently running on the core
           unschedule_job(i, time);
           // schedule new job
