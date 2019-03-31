@@ -21,6 +21,7 @@ typedef struct _job_t
 
   int arrival_time;
   int start_time;
+  int latest_start_time;
   int running_time;
   int remaining_time;
 } job_t;
@@ -31,6 +32,7 @@ job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
   new_j->priority = priority;
   new_j->arrival_time = arrival_time;
   new_j->start_time = -1;
+  new_j->latest_start_time = -1;
   new_j->running_time = running_time;
   new_j->remaining_time = running_time;
 
@@ -143,9 +145,19 @@ void schedule_job(job_t* job, int core, int time){
     job->start_time = time;
   }
 
+  // update job latest start time
+  job->latest_start_time = time;
+
   g_running_jobs[core] = job;
 }
 
+
+void unschedule_job(int core, int time){
+  job_t* job = g_running_jobs[core];
+  g_running_jobs[core] = NULL;
+  job->remaining_time -= (time - job->latest_start_time);
+  priqueue_offer(&g_job_queue, job);
+}
 
 /**
   Called when a new job arrives.
@@ -188,7 +200,18 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   // if there are not idle cores...
   switch(g_scheme){
     case(PSJF): {
-
+      // go through each core until we find a job to preempt or run out of cores
+      for(int i = 0; i < g_total_cores; i++){
+        // test if we should do preemption
+        if(g_job_queue->comparer(this_job, g_running_jobs[i]) < 0){
+          // unschedule job currently running on the core
+          unschedule_job(i, time);
+          // schedule new job
+          schedule_job(this_job, i, time);
+          return i;
+        }
+      }
+      return -1;
     }
     case(PPRI): {
 
