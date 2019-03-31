@@ -203,7 +203,8 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
 
   // if there are not idle cores...
   switch(g_scheme){
-    case(PSJF): {
+    case(PSJF):
+    case(PPRI): {
       job_t* test_job;
       // go through each core until we find a job to preempt or run out of cores
       for(int i = 0; i < g_total_cores; i++){
@@ -218,13 +219,10 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
           return i;
         }
       }
-      return -1;
-    }
-    case(PPRI): {
-
     }
     default: {
       // non-preemptive schedulers (and round robin) should just be added to waiting queue
+      // preemptive schedulers that don't do a preemption will fall through to this case also
       priqueue_offer(&g_job_queue, this_job);
       return -1;
     }
