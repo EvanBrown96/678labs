@@ -44,7 +44,7 @@ job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
 scheme_t g_scheme;
 priqueue_t g_job_queue;
 priqueue_t g_idle_cores;
-int g_cores;
+int g_total_cores;
 job_t** g_running_jobs;
 int* g_cores_list;
 
@@ -103,7 +103,7 @@ int job_compare_pri(const void* j1, const void* j2){
 void scheduler_start_up(int cores, scheme_t scheme)
 {
   // set constant globals
-  g_cores = cores;
+  g_total_cores = cores;
   g_scheme = scheme;
 
   // setup jobs queue and list
@@ -126,7 +126,7 @@ void scheduler_start_up(int cores, scheme_t scheme)
   g_cores_list = malloc(cores * sizeof(int));
   for(int i = 0; i < cores; i++){
     g_cores_list[i] = i;
-    priqueue_offer(&g_cores, &g_cores_list[i]);
+    priqueue_offer(&g_idle_cores, &g_cores_list[i]);
   }
 
   // initialize timing data to 0
@@ -177,9 +177,9 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
 	if(!priqueue_is_empty(&g_idle_cores)){
 
     // get first idle core
-    int core = priqueue_poll(&g_idle_cores);
+    int core = *(int*)priqueue_poll(&g_idle_cores);
     // add job to running jobs list
-    schedule_job(this_job, core, time)
+    schedule_job(this_job, core, time);
 
     return core;
 
@@ -227,7 +227,7 @@ int scheduler_job_finished(int core_id, int job_number, int time)
   // update timing information
   int turnaround_time = time - finished_job->arrival_time;
   total_turnaround_time += turnaround_time;
-  total_waiting_time += (turnaround_time - finished_job->running_time;)
+  total_waiting_time += (turnaround_time - finished_job->running_time);
   total_response_time += (finished_job->start_time - finished_job->arrival_time);
 
   free(finished_job);
