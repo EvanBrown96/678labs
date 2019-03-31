@@ -159,6 +159,11 @@ void update_remaining_time(job_t* job, int time){
 void unschedule_job(int core, int time){
   job_t* job = g_running_jobs[core];
   g_running_jobs[core] = NULL;
+
+  // test if the job was first scheduled in this same time period
+  // if so, reset start time, since the job didn't actually get to run
+  if(job->start_time == time) job->start_time = -1;
+  
   update_remaining_time(job, time);
   priqueue_offer(&g_job_queue, job);
 }
