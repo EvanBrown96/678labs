@@ -22,6 +22,7 @@ typedef struct _job_t
 
   int arrival_time;
   int start_time;
+  int latest_queue_time;
   int latest_update_time;
   int running_time;
   int remaining_time;
@@ -44,6 +45,7 @@ job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
   new_j->arrival_time = arrival_time;
   new_j->start_time = -1;
   new_j->latest_update_time = -1;
+  new_j->latest_queue_time = -1;
   new_j->running_time = running_time;
   new_j->remaining_time = running_time;
 
@@ -83,7 +85,7 @@ int core_compare(const void* core1, const void* core2){
 /**
   comparison function for fcfs scheme
 
-  sorts based on arrival time
+  sorts based on time job was last put in queue
 
   @param j1: first job to compare
   @param j2: second job to compare
@@ -93,7 +95,7 @@ int job_compare_fcfs(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
 
-  return (job1->arrival_time - job2->arrival_time);
+  return (job1->latest_queue_time - job2->latest_queue_time);
 }
 
 /**
@@ -184,7 +186,13 @@ void scheduler_start_up(int cores, scheme_t scheme)
   total_response_time = 0;
 }
 
+/**
+  adds the given job to the given core and updates accounting info
 
+  @param job job to add
+  @param core core the job will be running on
+  @param time current system time
+ */
 void schedule_job(job_t* job, int core, int time){
   // set the job start time if job hasn't been run before
   if(job->start_time == -1){
@@ -197,11 +205,24 @@ void schedule_job(job_t* job, int core, int time){
   g_running_jobs[core] = job;
 }
 
+/**
+  updates time remaining to complete a job
+
+  @param job job to update
+  @param time current system time
+ */
 void update_remaining_time(job_t* job, int time){
   job->remaining_time -= (time - job->latest_update_time);
   job->latest_update_time = time;
 }
 
+/**
+  removes the job currently running on the given core and puts it in the job queue
+  used for preemption
+
+  @param core core to preempt current job on
+  @param time current system time
+ */
 void unschedule_job(int core, int time){
   job_t* job = g_running_jobs[core];
   g_running_jobs[core] = NULL;
@@ -211,6 +232,7 @@ void unschedule_job(int core, int time){
   if(job->start_time == time) job->start_time = -1;
 
   update_remaining_time(job, time);
+  job->latest_queue_time = time;
   priqueue_offer(&g_job_queue, job);
 }
 
@@ -278,11 +300,32 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     default: {
       // non-preemptive schedulers (and round robin) should just be added to waiting queue
       // preemptive schedulers that don't do a preemption will fall through to this case also
+      job->latest_queue_time = time;
       priqueue_offer(&g_job_queue, this_job);
       return -1;
     }
   }
 
+}
+
+/**
+  after a preemption, schedule the next available job on the given core
+
+  @param core_id core to scheule next job on
+  @return job id of the scheduled job
+ */
+int schedule_next_job(int core_id){
+  // if there aren't any jobs waiting
+  if(priqueue_is_empty(&g_job_queue)){
+    priqueue_offer(&g_idle_cores, &g_cores_list[core_id]);
+    return -1;
+  }
+
+  // otherwise, schedule next job on this core
+  job_t* next_job = priqueue_poll(&g_job_queue);
+  schedule_job(next_job, core_id, time);
+
+  return next_job->job_id;
 }
 
 /**
@@ -312,21 +355,10 @@ int scheduler_job_finished(int core_id, int job_number, int time)
   total_turnaround_time += turnaround_time;
   total_waiting_time += (turnaround_time - finished_job->running_time);
   total_response_time += (finished_job->start_time - finished_job->arrival_time);
-  printf("FINISHED JOB %d: %d, %d", finished_job->job_id, finished_job->arrival_time, finished_job->start_time);
 
   free(finished_job);
 
-  // if there aren't any jobs waiting
-  if(priqueue_is_empty(&g_job_queue)){
-    priqueue_offer(&g_idle_cores, &g_cores_list[core_id]);
-    return -1;
-  }
-
-  // otherwise, schedule next job on this core
-  job_t* next_job = priqueue_poll(&g_job_queue);
-  schedule_job(next_job, core_id, time);
-
-  return next_job->job_id;
+  return schedule_next_job(core_id);
 
 }
 
@@ -346,7 +378,15 @@ int scheduler_job_finished(int core_id, int job_number, int time)
  */
 int scheduler_quantum_expired(int core_id, int time)
 {
-	return -1;
+  // get job that is being preempted
+	job_t* preempt_job = g_running_jobs[core_id];
+  g_running_jobs[core_id] = NULL;
+
+  // add job back to queue
+  preempt_job->latest_queue_time = time;
+  priqueue_force_end(&g_job_queue, preempt_job);
+
+  return schedule_next_job(core_id);
 }
 
 
