@@ -232,9 +232,13 @@ int scheduler_job_finished(int core_id, int job_number, int time)
 
   free(finished_job);
 
-  // schedule next job on this core
-  if(priqueue_is_empty(&g_job_queue)) return -1;
+  // if there aren't any jobs waiting
+  if(priqueue_is_empty(&g_job_queue)){
+    priqueue_offer(&g_idle_cores, &g_cores_list[core_id]);
+    return -1;
+  }
 
+  // otherwise, schedule next job on this core
   job_t* next_job = priqueue_poll(&g_job_queue);
   schedule_job(next_job, core_id, time);
 
