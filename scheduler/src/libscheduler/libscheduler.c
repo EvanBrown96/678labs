@@ -163,7 +163,7 @@ void unschedule_job(int core, int time){
   // test if the job was first scheduled in this same time period
   // if so, reset start time, since the job didn't actually get to run
   if(job->start_time == time) job->start_time = -1;
-  
+
   update_remaining_time(job, time);
   priqueue_offer(&g_job_queue, job);
 }
@@ -210,19 +210,23 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   switch(g_scheme){
     case(PSJF):
     case(PPRI): {
-      job_t* test_job;
-      // go through each core until we find a job to preempt or run out of cores
-      for(int i = 0; i < g_total_cores; i++){
-        test_job = g_running_jobs[i];
-        update_remaining_time(test_job, time);
-        // test if we should do preemption
-        if(g_job_queue.comparer(this_job, g_running_jobs[i]) < 0){
-          // unschedule job currently running on the core
-          unschedule_job(i, time);
-          // schedule new job
-          schedule_job(this_job, i, time);
-          return i;
+      int least_job_core = 0;
+      update_remaining_time(g_running_jobs[0], time);
+      // find currently running job with least importance
+      for(int i = 1; i < g_total_cores; i++){
+        update_remaining_time(g_running_jobs[i], time);
+        if(g_job_queue.comparer(g_running_jobs[i], g_running_jobs[least_job_core]) > 0){
+          least_job_core = i;
         }
+      }
+
+      // test if we should do preemption
+      if(g_job_queue.comparer(this_job, g_running_jobs[least_job_core]) < 0){
+        // unschedule job currently running on the core
+        unschedule_job(least_job_core, time);
+        // schedule new job
+        schedule_job(this_job, least_job_core, time);
+        return least_job_core;
       }
     }
     default: {
