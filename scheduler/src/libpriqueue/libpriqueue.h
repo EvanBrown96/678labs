@@ -4,16 +4,6 @@
 #ifndef LIBPRIQUEUE_H_
 #define LIBPRIQUEUE_H_
 
-// //node of priority queue
-// typedef struct _pqnode_t
-// {
-//
-//   void* data;
-//   struct _pqnode_t* left;
-//   struct _pqnode_t* right;
-//
-// } pqnode_t;
-
 /**
   Priqueue Data Structure
 */

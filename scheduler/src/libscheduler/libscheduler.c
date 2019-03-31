@@ -16,6 +16,7 @@
 */
 typedef struct _job_t
 {
+
   int job_id;
   int priority;
 
@@ -24,8 +25,18 @@ typedef struct _job_t
   int latest_update_time;
   int running_time;
   int remaining_time;
+
 } job_t;
 
+/**
+  creates a new job
+
+  @param job_id id of the new job
+  @param priority priority of the new job
+  @param arrival_time time the job was given to the scheduler
+  @param running_time time the job takes to complete
+  @return the new job
+ */
 job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
   job_t* new_j = malloc(sizeof(job_t));
   new_j->job_id = job_id;
@@ -43,26 +54,41 @@ job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
   globals
 */
 
-scheme_t g_scheme;
-priqueue_t g_job_queue;
-priqueue_t g_idle_cores;
-int g_total_cores;
-job_t** g_running_jobs;
-int* g_cores_list;
+scheme_t g_scheme;         // scheme being used by the scheduler
+priqueue_t g_job_queue;    // queue for storing idle jobs
+priqueue_t g_idle_cores;   // queue for storing idle cores
+int g_total_cores;         // count of total cores available
+job_t** g_running_jobs;     // array of jobs currently running
+int* g_cores_list;         // array of core indices
 
-int total_jobs;
-int total_waiting_time;
-int total_turnaround_time;
-int total_response_time;
+int total_jobs;            // count of total jobs completed
+int total_waiting_time;    // total time jobs have spent waiting
+int total_turnaround_time; // total time from arrival to completion for all jobs
+int total_response_time;   // total time from arrival to first run for all jobs
 
 /**
-  comparison functions, for priority queues
-*/
+  comparison function for core ids
 
+  used to sort idle_cores priqueue
+
+  @param core1: first core to compare
+  @param core2: second core to compare
+  @return < 0 if first core should be first; > 0 if second core should be first
+ */
 int core_compare(const void* core1, const void* core2){
   return *((int*) core1) - *((int*) core2);
 }
 
+
+/**
+  comparison function for fcfs scheme
+
+  sorts based on arrival time
+
+  @param j1: first job to compare
+  @param j2: second job to compare
+  @return < 0 if first job should be first; > 0 if second job should be first
+ */
 int job_compare_fcfs(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
@@ -70,6 +96,16 @@ int job_compare_fcfs(const void* j1, const void* j2){
   return (job1->arrival_time - job2->arrival_time);
 }
 
+/**
+  comparison function for sjf scheme
+
+  sorts based on remaining time
+  tiebreaker based on arrival time
+
+  @param j1: first job to compare
+  @param j2: second job to compare
+  @return < 0 if first job should be first; > 0 if second job should be first
+ */
 int job_compare_sjf(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
@@ -80,6 +116,16 @@ int job_compare_sjf(const void* j1, const void* j2){
   return (job1->remaining_time - job2->remaining_time);
 }
 
+/**
+  comparison function for priority scheme
+
+  sorts based on priority
+  tiebreaker based on arrival time
+
+  @param j1: first job to compare
+  @param j2: second job to compare
+  @return < 0 if first job should be first; > 0 if second job should be first
+ */
 int job_compare_pri(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
