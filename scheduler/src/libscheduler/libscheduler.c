@@ -86,7 +86,7 @@ int core_compare(const void* core1, const void* core2){
   comparison function for fcfs scheme
 
   sorts based on time job was last put in queue
-  if times are equal, always move to end of queue
+  if times are equal, existant job always gets priority
 
   @param j1: first job to compare
   @param j2: second job to compare

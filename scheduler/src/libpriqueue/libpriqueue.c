@@ -84,22 +84,6 @@ int priqueue_offer(priqueue_t *q, void *ptr)
 }
 
 /**
-  adds the specified element at the very end of the priority queue
-
-  @param q a pointer to an instance of the priqueue_t data structure
-  @param ptr a pointer to the data to be inserted at the end of the queue
-  @return The zero-based index where ptr is stored in the priority queue, where 0 indicates that ptr was stored at the front of the priority queue.
- */
-int priqueue_force_end(priqueue_t *q, void *ptr){
-  if(q->count == q->size) priqueue_resize(q);
-
-  q->data[priqueue_get_true_index(q, q->count)] = ptr;
-
-  q->count++;
-  return (q->count)-1;
-}
-
-/**
   Retrieves, but does not remove, the head of this queue, returning NULL if
   this queue is empty.
 
