@@ -17,13 +17,25 @@
 typedef struct _job_t
 {
   int job_id;
-  int arrival_time;
-  int running_time;
-  int progress_time;
-
   int priority;
-  int core;
+
+  int arrival_time;
+  int start_time;
+  int running_time;
+  int remaining_time;
 } job_t;
+
+job_t* new_job(int job_id, int priority, int arrival_time, int running_time){
+  job_t* new_j = malloc(sizeof(job_t));
+  new_j->job_id = job_id;
+  new_j->priority = priority;
+  new_j->arrival_time = arrival_time;
+  new_j->start_time = -1;
+  new_j->running_time = running_time;
+  new_j->remaining_time = running_time;
+
+  return new_j;
+}
 
 /**
   globals
@@ -33,7 +45,13 @@ scheme_t g_scheme;
 priqueue_t g_job_queue;
 priqueue_t g_idle_cores;
 int g_cores;
-job_t* g_running_jobs;
+job_t** g_running_jobs;
+int* g_cores_list;
+
+int total_jobs;
+int total_waiting_time;
+int total_turnaround_time;
+int total_response_time;
 
 /**
   comparison functions, for priority queues
@@ -43,7 +61,24 @@ int core_compare(const void* core1, const void* core2){
   return *((int*) core1) - *((int*) core2);
 }
 
-int job_compare(const void* j1, const void* j2){
+int job_compare_fcfs(const void* j1, const void* j2){
+  job_t* job1 = (job_t*)j1;
+  job_t* job2 = (job_t*)j2;
+
+  return (job1->arrival_time - job2->arrival_time);
+}
+
+int job_compare_sjf(const void* j1, const void* j2){
+  job_t* job1 = (job_t*)j1;
+  job_t* job2 = (job_t*)j2;
+
+  if(job1->remaining_time == job2->remaining_time){
+    return (job1->arrival_time - job2->arrival_time);
+  }
+  return (job1->remaining_time - job2->remaining_time);
+}
+
+int job_compare_pri(const void* j1, const void* j2){
   job_t* job1 = (job_t*)j1;
   job_t* job2 = (job_t*)j2;
 
@@ -67,11 +102,48 @@ int job_compare(const void* j1, const void* j2){
 */
 void scheduler_start_up(int cores, scheme_t scheme)
 {
+  // set constant globals
   g_cores = cores;
   g_scheme = scheme;
+
+  // setup jobs queue and list
+  switch(scheme){
+    case(FCFS):
+    case(RR):
+      priqueue_init(&g_job_queue, job_compare_fcfs);
+      break;
+    case(PRI):
+    case(PPRI):
+      priqueue_init(&g_job_queue, job_compare_pri);
+      break;
+    default:
+      priqueue_init(&g_job_queue, job_compare_sjf);
+  }
+  g_running_jobs = malloc(cores * sizeof(job_t*));
+
+  // setup idle cores queue
   priqueue_init(&g_idle_cores, core_compare);
-  priqueue_init(&g_job_queue, job_compare);
-  g_running_jobs = malloc(cores * sizeof(job_t));
+  g_cores_list = malloc(cores * sizeof(int));
+  for(int i = 0; i < cores; i++){
+    g_cores_list[i] = i;
+    priqueue_offer(&g_cores, &g_cores_list[i]);
+  }
+
+  // initialize timing data to 0
+  total_jobs = 0;
+  total_waiting_time = 0;
+  total_turnaround_time = 0;
+  total_response_time = 0;
+}
+
+
+void schedule_job(job_t* job, int core, int time){
+  // set the job start time if job hasn't been run before
+  if(job->start_time == -1){
+    job->start_time = time;
+  }
+
+  g_running_jobs[core] = job;
 }
 
 
@@ -97,13 +169,38 @@ void scheduler_start_up(int cores, scheme_t scheme)
  */
 int scheduler_new_job(int job_number, int time, int running_time, int priority)
 {
-	// if(!priqueue_is_empty(&g_idle_cores)){
-  //   job_t
-  // }
 
-  return -1;
+  // create new job
+  job_t* this_job = new_job(job_number, priority, time, running_time);
+
+  // if there are idle cores, job should start immediately
+	if(!priqueue_is_empty(&g_idle_cores)){
+
+    // get first idle core
+    int core = priqueue_poll(&g_idle_cores);
+    // add job to running jobs list
+    schedule_job(this_job, core, time)
+
+    return core;
+
+  }
+
+  // if there are not idle cores...
+  switch(g_scheme){
+    case(PSJF): {
+
+    }
+    case(PPRI): {
+
+    }
+    default: {
+      // non-preemptive schedulers (and round robin) should just be added to waiting queue
+      priqueue_offer(&g_job_queue, this_job);
+      return -1;
+    }
+  }
+
 }
-
 
 /**
   Called when a job has completed execution.
@@ -121,7 +218,28 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
  */
 int scheduler_job_finished(int core_id, int job_number, int time)
 {
-	return -1;
+  // get job that finished
+	job_t* finished_job = g_running_jobs[core_id];
+  g_running_jobs[core_id] = NULL;
+  // increment finished job count
+  total_jobs++;
+
+  // update timing information
+  int turnaround_time = time - finished_job->arrival_time;
+  total_turnaround_time += turnaround_time;
+  total_waiting_time += (turnaround_time - finished_job->running_time;)
+  total_response_time += (finished_job->start_time - finished_job->arrival_time);
+
+  free(finished_job);
+
+  // schedule next job on this core
+  if(priqueue_is_empty(&g_job_queue)) return -1;
+
+  job_t* next_job = priqueue_poll(&g_job_queue);
+  schedule_job(next_job, core_id, time);
+
+  return next_job->job_id;
+
 }
 
 
@@ -153,7 +271,7 @@ int scheduler_quantum_expired(int core_id, int time)
  */
 float scheduler_average_waiting_time()
 {
-	return 0.0;
+	return ((float) total_waiting_time) / total_jobs;
 }
 
 
@@ -166,7 +284,7 @@ float scheduler_average_waiting_time()
  */
 float scheduler_average_turnaround_time()
 {
-	return 0.0;
+	return ((float) total_turnaround_time) / total_jobs;
 }
 
 
@@ -179,7 +297,7 @@ float scheduler_average_turnaround_time()
  */
 float scheduler_average_response_time()
 {
-	return 0.0;
+	return ((float) total_response_time) / total_jobs;
 }
 
 
@@ -194,6 +312,7 @@ void scheduler_clean_up()
   priqueue_destroy(&g_idle_cores);
   priqueue_destroy(&g_job_queue);
   free(g_running_jobs);
+  free(g_cores_list);
 }
 
 
