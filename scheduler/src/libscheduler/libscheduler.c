@@ -257,6 +257,7 @@ int scheduler_job_finished(int core_id, int job_number, int time)
   total_turnaround_time += turnaround_time;
   total_waiting_time += (turnaround_time - finished_job->running_time);
   total_response_time += (finished_job->start_time - finished_job->arrival_time);
+  printf("FINISHED JOB %d: %d, %d", finished_job->job_id, finished_job->arrival_time, finished_job->start_time);
 
   free(finished_job);
 
