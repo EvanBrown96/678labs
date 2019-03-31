@@ -300,7 +300,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     default: {
       // non-preemptive schedulers (and round robin) should just be added to waiting queue
       // preemptive schedulers that don't do a preemption will fall through to this case also
-      job->latest_queue_time = time;
+      this_job->latest_queue_time = time;
       priqueue_offer(&g_job_queue, this_job);
       return -1;
     }
@@ -314,7 +314,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   @param core_id core to scheule next job on
   @return job id of the scheduled job
  */
-int schedule_next_job(int core_id){
+int schedule_next_job(int core_id, int time){
   // if there aren't any jobs waiting
   if(priqueue_is_empty(&g_job_queue)){
     priqueue_offer(&g_idle_cores, &g_cores_list[core_id]);
@@ -358,7 +358,7 @@ int scheduler_job_finished(int core_id, int job_number, int time)
 
   free(finished_job);
 
-  return schedule_next_job(core_id);
+  return schedule_next_job(core_id, time);
 
 }
 
@@ -386,7 +386,7 @@ int scheduler_quantum_expired(int core_id, int time)
   preempt_job->latest_queue_time = time;
   priqueue_force_end(&g_job_queue, preempt_job);
 
-  return schedule_next_job(core_id);
+  return schedule_next_job(core_id, time);
 }
 
 
