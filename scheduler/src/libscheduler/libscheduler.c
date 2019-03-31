@@ -204,7 +204,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   // if there are not idle cores...
   switch(g_scheme){
     case(PSJF): {
-      job_t* test_job
+      job_t* test_job;
       // go through each core until we find a job to preempt or run out of cores
       for(int i = 0; i < g_total_cores; i++){
         test_job = g_running_jobs[i];
