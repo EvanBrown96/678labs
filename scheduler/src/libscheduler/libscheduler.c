@@ -384,7 +384,7 @@ int scheduler_quantum_expired(int core_id, int time)
 
   // add job back to queue
   preempt_job->latest_queue_time = time;
-  priqueue_force_end(&g_job_queue, preempt_job);
+  priqueue_offer(&g_job_queue, preempt_job);
 
   return schedule_next_job(core_id, time);
 }

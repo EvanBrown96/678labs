@@ -66,7 +66,7 @@ int priqueue_offer(priqueue_t *q, void *ptr)
 
   // find index where data should be inserted
   int index = 0;
-  while(index < q->count && q->comparer(ptr, q->data[priqueue_get_true_index(q, index)]) > 0){
+  while(index < q->count && q->comparer(ptr, q->data[priqueue_get_true_index(q, index)]) >= 0){
     index++;
   }
 
