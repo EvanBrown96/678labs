@@ -315,6 +315,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   after a preemption, schedule the next available job on the given core
 
   @param core_id core to scheule next job on
+  @param time the current time of the simulator
   @return job id of the scheduled job
  */
 int schedule_next_job(int core_id, int time){
