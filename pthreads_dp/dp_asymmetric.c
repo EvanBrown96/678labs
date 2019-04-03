@@ -150,7 +150,7 @@ static void *dp_thread(void *arg)
     }
 
     /*
-     * Grab both chopsticks: ASYMMETRIC and WAITER SOLUTION
+     * Grab both chopsticks: change order based on if philosopher id is odd or even
      */
     if(id%2 == 0) pthread_mutex_lock(left_chop(me));
     pthread_mutex_lock(right_chop(me));
