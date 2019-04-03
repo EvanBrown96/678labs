@@ -166,9 +166,6 @@ static void *dp_thread(void *arg)
     // unlock waiter while eating
     pthread_mutex_unlock(&waiter);
 
-    // pthread_mutex_lock(left_chop(me));
-    // pthread_mutex_lock(right_chop(me));
-
     /*
      * Eat some random amount of food. Again, this involves a
      * subroutine call for each mouthful, which is a feature, not a
@@ -181,7 +178,9 @@ static void *dp_thread(void *arg)
     // reobtain waiter mutex
     pthread_mutex_lock(&waiter);
 
-    // indicate my chopsticks are available
+    /*
+     * Release both chopsticks: WAITER SOLUTION
+     */
     *left_chop_available(me) = 1;
     *right_chop_available(me) = 1;
 
@@ -191,11 +190,6 @@ static void *dp_thread(void *arg)
 
     // let go of waiter
     pthread_mutex_unlock(&waiter);
-    /*
-     * Release both chopsticks: WAITER SOLUTION
-     */
-    // pthread_mutex_unlock(right_chop(me));
-    // pthread_mutex_unlock(left_chop(me));
 
     /*
      * Update my progress in current session and for all time.
