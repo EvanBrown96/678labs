@@ -36,8 +36,8 @@ int main (int argc, char *argv[])
   if (argc != 3)
     err_quit ("usage: memmap <fromfile> <tofile>");
 
-  /* 
-   * open the input file 
+  /*
+   * open the input file
    */
   if ((fdin = open (argv[1], O_RDONLY)) < 0) {
     sprintf(buf, "can't open %s for reading", argv[1]);
@@ -45,43 +45,76 @@ int main (int argc, char *argv[])
     exit(errno);
   }
 
-  /* 
-   * open/create the output file 
+  /*
+   * open/create the output file
    */
+
   if ((fdout = open (argv[2], O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0) {
     sprintf (buf, "can't create %s for writing", argv[2]);
     perror(buf);
     exit(errno);
   }
 
-  /* 
-   * 1. find size of input file 
+  /*
+   * 1. find size of input file
    */
 
-  /* 
-   * 2. go to the location corresponding to the last byte 
+  if(fstat(fdin, &statbuf) < 0){
+    sprintf(buf, "input file size check failed");
+    perror(buf);
+    exit(errno);
+  }
+
+  off_t length = statbuf.st_size;
+
+  /*
+   * 2. go to the location corresponding to the last byte
    */
 
-  /* 
-   * 3. write a dummy byte at the last location 
+  if(lseek(fdout, length-1, SEEK_SET) < 0){
+    sprintf(buf, "move to last byte of output file failed");
+    perror(buf);
+    exit(errno);
+  }
+
+  /*
+   * 3. write a dummy byte at the last location
    */
 
-  /* 
-   * 4. mmap the input file 
+  if(write(fdout, " ", 1) != 1){
+    sprintf(buf, "write of dummy byte failed");
+    perror(buf);
+    exit(errno);
+  }
+
+  /*
+   * 4. mmap the input file
    */
 
-  /* 
-   * 5. mmap the output file 
+  if((src = mmap(NULL, length, PROT_READ, MAP_SHARED, fdin, 0)) == (void*)(-1)){
+    sprintf(buf, "input file memory map failed");
+    perror(buf);
+    exit(errno);
+  }
+
+  /*
+   * 5. mmap the output file
    */
 
-  /* 
-   * 6. copy the input file to the output file 
+  if((dst = mmap(NULL, length, (PROT_READ | PROT_WRITE), MAP_SHARED, fdout, 0)) == (void*)(-1)){
+    sprintf(buf, "output file memory map failed");
+    perror(buf);
+    exit(errno);
+  }
+
+  /*
+   * 6. copy the input file to the output file
    */
     /* Memory can be dereferenced using the * operator in C.  This line
      * stores what is in the memory location pointed to by src into
      * the memory location pointed to by dest.
      */
-    *dst = *src;
-} 
 
+  memcpy(dst, src, length);
 
+}
