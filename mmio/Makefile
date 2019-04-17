@@ -1,4 +1,4 @@
-STUDENT_ID=XXXXXXX
+STUDENT_ID=2824018
 
 all:
 	gcc -g read_write.c -o read_write
@@ -11,10 +11,9 @@ test:
 	./memmap sample.ogg copy.ogg
 	diff sample.ogg copy.ogg
 
-zip: 
+zip:
 	make clean
 	mkdir $(STUDENT_ID)-mmio-lab
 	cp Makefile memmap.c read_write.c $(STUDENT_ID)-mmio-lab/
 	zip -r $(STUDENT_ID)-mmio-lab.zip $(STUDENT_ID)-mmio-lab
 	rm -rf $(STUDENT_ID)-mmio-lab
-
