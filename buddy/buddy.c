@@ -50,6 +50,7 @@
  **************************************************************************/
 typedef struct {
 	struct list_head list;
+	int index;
 	/* TODO: DECLARE NECESSARY MEMBER VARIABLES */
 } page_t;
 
@@ -81,6 +82,8 @@ void buddy_init()
 	int i;
 	int n_pages = (1<<MAX_ORDER) / PAGE_SIZE;
 	for (i = 0; i < n_pages; i++) {
+		INIT_LIST_HEAD(&(g_pages[i].list));
+		g_pages[i].index = i;
 		/* TODO: INITIALIZE PAGE STRUCTURES */
 	}
 
@@ -109,8 +112,31 @@ void buddy_init()
  */
 void *buddy_alloc(int size)
 {
-	/* TODO: IMPLEMENT THIS FUNCTION */
-	return NULL;
+
+	// get smallest block size that will satisfy request
+	int needed_block = MIN_ORDER;
+	while((1 << needed_block) < size) needed_block++;
+	if(needed_block > MAX_ORDER) return NULL;
+
+	// find smallest open block past this point
+	int o = needed_block;
+	while(list_empty(&free_area[o])){
+		// no free memory, if we reached the end
+		if(o >= MAX_ORDER) return NULL;
+		o++;
+	}
+
+	while(o > needed_block){
+		// split
+		o--;
+	}
+
+	// get first page of free area
+	page_t free_page = list_entry(free_area[o].next, page_t, list);
+	// get address of page
+	void* addr = PAGE_TO_ADDR(free_page.index);
+
+	return addr;
 }
 
 /**
