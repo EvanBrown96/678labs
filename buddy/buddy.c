@@ -51,6 +51,7 @@
 typedef struct {
 	struct list_head list;
 	int index;
+	int is_free;
 	/* TODO: DECLARE NECESSARY MEMBER VARIABLES */
 } page_t;
 
@@ -70,6 +71,23 @@ page_t g_pages[(1<<MAX_ORDER)/PAGE_SIZE];
  * Public Function Prototypes
  **************************************************************************/
 
+void buddy_split(int order){
+
+	// get first free page of the desired size
+	page_t* free_page = list_entry(free_area[order].next, page_t, list);
+	// remove it from free list of this size
+	list_del_init(free_area[order].next);
+
+	// find its buddy
+	void* buddy_addr = BUDDY_ADDR(PAGE_TO_ADDR(free_page->index), (order-1));
+	page_t* buddy_page = &(g_pages[ADDR_TO_PAGE(buddy_addr)]);
+
+	// add both to free list of one less order
+	list_add(&(buddy_page->list), &free_area[order-1]);
+	list_add(&(free_page->list), &free_area[order-1]);
+
+}
+
 /**************************************************************************
  * Local Functions
  **************************************************************************/
@@ -84,6 +102,7 @@ void buddy_init()
 	for (i = 0; i < n_pages; i++) {
 		INIT_LIST_HEAD(&(g_pages[i].list));
 		g_pages[i].index = i;
+		g_pages[i].is_free = 1;
 		/* TODO: INITIALIZE PAGE STRUCTURES */
 	}
 
@@ -126,16 +145,21 @@ void *buddy_alloc(int size)
 		o++;
 	}
 
+	// split blocks until we have the desired size
 	while(o > needed_block){
-		// split
+		buddy_split(o);
 		o--;
 	}
 
 	// get first page of free area
-	page_t free_page = list_entry(free_area[o].next, page_t, list);
-	// get address of page
-	void* addr = PAGE_TO_ADDR(free_page.index);
+	page_t* free_page = list_entry(free_area[o].next, page_t, list);
+	// remove it from free list
+	list_del_init(free_area[o].next);
+	// mark page as not free
+	free_page->is_free = 0;
 
+	// get address of page
+	void* addr = PAGE_TO_ADDR(free_page->index);
 	return addr;
 }
 
