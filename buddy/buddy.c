@@ -97,6 +97,9 @@ page_t* buddy_combine(page_t* the_page, page_t* buddy_page){
 	// give back original page if its buddy is not free
 	if(!buddy_page->is_free) return the_page;
 
+	// also if the buddy is not the correct size
+	if(buddy_page->block_size != the_page->block_size) return the_page;
+
 	// remove buddy from free list
 	list_del(&(buddy_page->list));
 
@@ -110,6 +113,10 @@ page_t* buddy_combine(page_t* the_page, page_t* buddy_page){
 	// increase size of block corresponding with this page
 	the_page->block_size++;
 
+	// if block has reached entire memory, exit call
+	if(the_page->block_size == MAX_ORDER) return the_page;
+
+	// find the buddy of the new block and attempt to combine them
 	buddy_page = &(g_pages[ADDR_TO_PAGE(BUDDY_ADDR(PAGE_TO_ADDR(the_page->index), the_page->block_size))]);
 	return buddy_combine(the_page, buddy_page);
 
