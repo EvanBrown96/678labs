@@ -125,6 +125,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:afd24c17a9f60f637336f5943f053cce2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buddy_8c.html#afd24c17a9f60f637336f5943f053cce2">buddy_split</a> (int order)</td></tr>
+<tr class="separator:afd24c17a9f60f637336f5943f053cce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfb1f99dbcfa5ecff9fd819109e035bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpage__t.html">page_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buddy_8c.html#acfb1f99dbcfa5ecff9fd819109e035bc">buddy_combine</a> (<a class="el" href="structpage__t.html">page_t</a> *the_page, <a class="el" href="structpage__t.html">page_t</a> *buddy_page)</td></tr>
+<tr class="separator:acfb1f99dbcfa5ecff9fd819109e035bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6674e7c974485f8a5dd8874e9eb125f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buddy_8c.html#a6674e7c974485f8a5dd8874e9eb125f3">buddy_init</a> ()</td></tr>
 <tr class="separator:a6674e7c974485f8a5dd8874e9eb125f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8197baf99e89c859b5326a1d455680fd"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="buddy_8c.html#a8197baf99e89c859b5326a1d455680fd">buddy_alloc</a> (int size)</td></tr>
@@ -185,7 +189,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">(<span class="keywordtype">void</span> *)((((<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>)addr - (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>)<a class="code" href="buddy_8c.html#ad6d688a63e574ba24b0247b2bec1e31d">g_memory</a>) ^ (1&lt;&lt;o)) \</div><div class="line">                                     + (<span class="keywordtype">unsigned</span> long)g_memory)</div><div class="ttc" id="buddy_8c_html_ad6d688a63e574ba24b0247b2bec1e31d"><div class="ttname"><a href="buddy_8c.html#ad6d688a63e574ba24b0247b2bec1e31d">g_memory</a></div><div class="ttdeci">char g_memory[1&lt;&lt; MAX_ORDER]</div><div class="ttdef"><b>Definition:</b> <a href="buddy_8c_source.html#l00063">buddy.c:63</a></div></div>
+<b>Value:</b><div class="fragment"><div class="line">(<span class="keywordtype">void</span> *)((((<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>)addr - (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>)<a class="code" href="buddy_8c.html#ad6d688a63e574ba24b0247b2bec1e31d">g_memory</a>) ^ (1&lt;&lt;o)) \</div><div class="line">                                     + (<span class="keywordtype">unsigned</span> long)g_memory)</div><div class="ttc" id="buddy_8c_html_ad6d688a63e574ba24b0247b2bec1e31d"><div class="ttname"><a href="buddy_8c.html#ad6d688a63e574ba24b0247b2bec1e31d">g_memory</a></div><div class="ttdeci">char g_memory[1&lt;&lt; MAX_ORDER]</div><div class="ttdef"><b>Definition:</b> <a href="buddy_8c_source.html#l00065">buddy.c:65</a></div></div>
 </div><!-- fragment -->
 <p>Definition at line <a class="el" href="buddy_8c_source.html#l00035">35</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
@@ -337,7 +341,49 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>memory block address </dd></dl>
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00110">110</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00190">190</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acfb1f99dbcfa5ecff9fd819109e035bc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structpage__t.html">page_t</a>* buddy_combine </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpage__t.html">page_t</a> *&#160;</td>
+          <td class="paramname"><em>the_page</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structpage__t.html">page_t</a> *&#160;</td>
+          <td class="paramname"><em>buddy_page</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>combines two blocks</p>
+<p>order of blocks does not matter</p>
+<p>assumptions made:</p><ul>
+<li>buddy_page points to the correct buddy of the_page based on the_page's block_size</li>
+<li>the_page is properly marked as free</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">the_page</td><td>pointer to the page at the start of a block </td></tr>
+    <tr><td class="paramname">buddy_page</td><td>pointer to the page at the start of that block's buddy </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the page resulting from the attempted combination </dd></dl>
+
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00118">118</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -356,7 +402,7 @@ Variables</h2></td></tr>
 <p>Print the buddy system status&mdash;order oriented</p>
 <p>print free pages in each order. </p>
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00135">135</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00271">271</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -382,7 +428,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00125">125</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00233">233</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -400,7 +446,36 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Initialize the buddy system </p>
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00079">79</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00155">155</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afd24c17a9f60f637336f5943f053cce2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void buddy_split </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>order</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>splits the first free page of the given order into two smaller pages</p>
+<p>assumptions made:</p><ul>
+<li>the first page of the free list of the given order has been properly marked as free</li>
+<li>there are no free blocks of size order-1 (otherwise why would we need to split?)</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">order</td><td>size of block to split up </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00083">83</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -415,7 +490,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00060">60</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00062">62</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -429,7 +504,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00063">63</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00065">65</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
@@ -443,7 +518,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buddy_8c_source.html#l00066">66</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
+<p>Definition at line <a class="el" href="buddy_8c_source.html#l00068">68</a> of file <a class="el" href="buddy_8c_source.html">buddy.c</a>.</p>
 
 </div>
 </div>
