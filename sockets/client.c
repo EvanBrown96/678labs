@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
    */
   for (i = 0; i < NSTRS; i++) {
     printf("SENDING:\n%s", strs[i]);
-    write(sockfd, &strs[i], BSIZE);
+    write(sockfd, strs[i], BSIZE);
     read(sockfd, &buf, BSIZE);
     printf("RECEIVED:\n%s\n", buf);
   }
