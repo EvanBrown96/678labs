@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
   /* Add Code: Populate the sockaddr_un struct */
   saun.sun_family = AF_UNIX;
-  strcpy(&saun.sun_path, &SOCKET_ADDRESS);
+  strcpy(saun.sun_path, SOCKET_ADDRESS);
   /* Add Code: Create the client session socket */
   sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
   if (sockfd < 0) {
